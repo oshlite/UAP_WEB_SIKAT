@@ -1,3 +1,28 @@
+
+<?php
+// tamu_dashboard.php
+session_start();
+date_default_timezone_set('Asia/Jakarta');
+
+require 'koneksi.php';
+
+// Cek login dan role
+if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_role'] !== 'admin') {
+    header('Location: login.php');
+    exit;
+}
+
+// Get user info
+$username = $_SESSION['username'];
+$fullName = $_SESSION['full_name'] ?? 'Tamu';
+
+// Handle logout
+if (isset($_GET['logout'])) {
+    session_destroy();
+    header('Location: login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -178,6 +203,13 @@
                         <i class="ri-settings-3-line"></i>
                     </div>
                     <span>Pengaturan</span>
+                </a>
+                 <a href="?logout=1" 
+                   class="nav-item flex items-center px-4 py-3 text-gray-700">
+                   <div class="w-6 h-6 flex items-center justify-center mr-3">
+                    <i class="ri-logout-box-line"></i>
+                   </div>
+                    <span>Logout</span>
                 </a>
             </div>
         </aside>
