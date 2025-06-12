@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ':area' => $area,
         ':luar_provinsi' => $luar_provinsi
     ]);
+    header('Location: bukuTamu.php');
 }
 
 
