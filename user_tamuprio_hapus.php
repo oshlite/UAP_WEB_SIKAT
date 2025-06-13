@@ -1,13 +1,10 @@
 <?php
-// user_tamuprio_hapus.php
 
-// 1. KONEKSI DATABASE
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) {
   die('DB Error: '.$db->connect_error);
 }
 
-// 2. HANDLE POST DELETE
 if($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
   $id = intval($_POST['id']);
   $ok = (bool)$db->query("DELETE FROM tamu_prio WHERE id=$id");
@@ -15,7 +12,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete
   exit;
 }
 
-// 3. AMBIL DATA TUNGGUAN BERDASARKAN ID
 $id = intval($_GET['id'] ?? 0);
 if(!$id) {
   header('Location: user_tamuprio.php?status=error');
@@ -82,7 +78,6 @@ $name = $row['name'];
 </head>
 <body>
   <div class="flex h-screen bg-gray-50">
-    <!-- SIDEBAR -->
     <div class="w-64 bg-white shadow-md hidden md:block">
       <div class="p-4 flex items-center">
         <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -124,9 +119,7 @@ $name = $row['name'];
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- HEADER & BREADCRUMB -->
       <header class="bg-white shadow-sm z-10">
         <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
           <a href="user_tamuprio.php" class="text-gray-500">Manajemen Tamu</a>
@@ -135,7 +128,6 @@ $name = $row['name'];
         </div>
       </header>
 
-      <!-- CONFIRMATION CARD -->
       <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div class="card mx-auto mt-8 p-6 max-w-lg">
           <h2 class="text-xl font-serif font-semibold text-gray-800">Konfirmasi Hapus Tamu</h2>

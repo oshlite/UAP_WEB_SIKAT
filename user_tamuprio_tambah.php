@@ -1,13 +1,8 @@
 <?php
-// -------------------------
-// user_tamuprio_tambah.php
-// -------------------------
 
-// 1. KONEKSI DATABASE
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
 
-// 2. CATEGORY → AREA MAP
 $categoryMap = [
   'Keluarga mempelai wanita' => ['Meja Keluarga Wanita','bg-blue-100 text-blue-700'],
   'Keluarga mempelai pria'   => ['Meja Keluarga Pria',  'bg-green-100 text-green-700'],
@@ -17,7 +12,6 @@ $categoryMap = [
   'Tamu luar provinsi'       => ['Meja VIP',            'bg-yellow-100 text-yellow-700']
 ];
 
-// 3. HANDLE FORM SUBMIT
 if($_SERVER['REQUEST_METHOD']==='POST') {
   $nama     = $db->real_escape_string($_POST['nama_tamu']);
   $kategori = $db->real_escape_string($_POST['kategori']);
@@ -60,7 +54,6 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
 </head>
 <body>
   <div class="flex h-screen bg-gray-50">
-    <!-- SIDEBAR -->
     <div class="w-64 bg-white shadow-md hidden md:block">
       <div class="p-4 flex items-center">
         <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -97,9 +90,7 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
       </div>
     </div>
 
-    <!-- CONTENT -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- HEADER -->
       <header class="bg-white shadow-sm z-10">
         <div class="flex items-center justify-between p-4">
           <div class="flex items-center md:hidden">
@@ -116,7 +107,6 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         </div>
       </header>
 
-      <!-- FORM -->
       <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div class="card mx-auto p-6 mt-6 w-full max-w-lg">
           <h2 class="text-2xl font-serif font-semibold text-gray-800">Tambah Tamu Undangan</h2>
@@ -154,13 +144,11 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
   </div>
 
   <script>
-    // update area ketika pilihan keperluan berubah
     const map = <?= json_encode($categoryMap) ?>;
     document.getElementById('categorySelect')
             .addEventListener('change',e=>{
       document.getElementById('areaInput').value = map[e.target.value][0];
     });
-    // inisialisasi area pertama
     document.getElementById('categorySelect').dispatchEvent(new Event('change'));
   </script>
 </body>

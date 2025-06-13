@@ -1,13 +1,8 @@
 <?php
-// ------------------------
-// user_tamuprio_edit.php
-// ------------------------
 
-// 1. KONEKSI DATABASE
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
 
-// 2. CATEGORY → AREA MAP
 $categoryMap = [
   'Keluarga mempelai wanita' => ['Meja Keluarga Wanita','bg-blue-100 text-blue-700'],
   'Keluarga mempelai pria'   => ['Meja Keluarga Pria',  'bg-green-100 text-green-700'],
@@ -17,7 +12,6 @@ $categoryMap = [
   'Tamu luar provinsi'       => ['Meja VIP',            'bg-yellow-100 text-yellow-700']
 ];
 
-// 3. AMBIL DATA BERDASARKAN ID
 $id = intval($_GET['id'] ?? 0);
 $res = $db->query("SELECT * FROM tamu_prio WHERE id=$id");
 if(!$res->num_rows) {
@@ -29,7 +23,6 @@ $currentName = $row['name'];
 $currentCat  = $row['kategori'];
 $currentArea = $categoryMap[$currentCat][0] ?? '';
 
-// 4. HANDLE UPDATE
 if($_SERVER['REQUEST_METHOD']==='POST') {
   $nama     = $db->real_escape_string($_POST['nama_tamu']);
   $kategori = $db->real_escape_string($_POST['kategori']);
@@ -74,7 +67,6 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
 </head>
 <body>
   <div class="flex h-screen bg-gray-50">
-    <!-- SIDEBAR -->
     <div class="w-64 bg-white shadow-md hidden md:block">
       <div class="p-4 flex items-center">
         <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -111,9 +103,7 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
       </div>
     </div>
 
-    <!-- CONTENT -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- HEADER & BREADCRUMB -->
       <header class="bg-white shadow-sm z-10">
         <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
           <a href="user_tamuprio.php" class="text-gray-500">Manajemen Tamu</a>
@@ -122,7 +112,6 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
         </div>
       </header>
 
-      <!-- FORM EDIT -->
       <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div class="card mx-auto p-6 mt-6 w-full max-w-lg">
           <h2 class="text-2xl font-serif font-semibold text-gray-800">Edit Tamu Undangan</h2>
@@ -162,12 +151,10 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
   </div>
 
   <script>
-    // update area secara dinamis
     const map = <?= json_encode($categoryMap) ?>;
     const sel = document.getElementById('categorySelect'),
           area = document.getElementById('areaInput');
     sel.onchange = ()=> area.value = map[sel.value][0];
-    // inisialisasi
     sel.dispatchEvent(new Event('change'));
   </script>
 </body>

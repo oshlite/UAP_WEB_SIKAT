@@ -1,13 +1,10 @@
 <?php
-// user_tamuprio.php
 
-// 1. KONEKSI DATABASE
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) {
   die('DB Error: '.$db->connect_error);
 }
 
-// 2. CATEGORY → AREA MAPPING
 $categoryMap = [
   'Keluarga mempelai wanita' => ['Meja Keluarga Wanita', 'bg-blue-100 text-blue-700'],
   'Keluarga mempelai pria'   => ['Meja Keluarga Pria',   'bg-green-100 text-green-700'],
@@ -17,7 +14,6 @@ $categoryMap = [
   'Tamu luar provinsi'       => ['Meja VIP',             'bg-yellow-100 text-yellow-700']
 ];
 
-// 3. HANDLE DELETE via POST
 if($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action'] ?? '')==='delete') {
   $id = intval($_POST['id']);
   $ok = (bool)$db->query("DELETE FROM tamu_prio WHERE id=$id");
@@ -26,7 +22,6 @@ if($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action'] ?? '')==='delete') {
   exit;
 }
 
-// 4. FETCH DATA
 $invitedGuests = [];
 $res = $db->query("SELECT * FROM tamu_prio ORDER BY id");
 while($row = $res->fetch_assoc()) {
@@ -94,7 +89,6 @@ while($row = $res->fetch_assoc()) {
 </head>
 <body>
   <div class="flex h-screen bg-gray-50">
-    <!-- SIDEBAR -->
     <div class="w-64 bg-white shadow-md hidden md:block">
       <div class="p-4 flex items-center">
         <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -139,9 +133,7 @@ while($row = $res->fetch_assoc()) {
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="flex-1 flex flex-col overflow-hidden">
-      <!-- HEADER & BREADCRUMB -->
       <header class="bg-white shadow-sm z-10">
         <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
           <a href="#" class="text-gray-500">Manajemen Tamu</a>
@@ -150,7 +142,6 @@ while($row = $res->fetch_assoc()) {
         </div>
       </header>
 
-      <!-- CONTENT -->
       <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
         <div class="mb-6 flex items-center justify-between">
           <div>
@@ -209,32 +200,26 @@ while($row = $res->fetch_assoc()) {
 
 <script>
 document.addEventListener('DOMContentLoaded', ()=>{
-  // baca status dari URL
   const status = new URLSearchParams(location.search).get('status');
   if(!status) return;
 
-  // ambil elemen toast
   const toast     = document.getElementById('toast'),
         toastMsg  = document.getElementById('toastMsg'),
         toastClose= document.getElementById('toastClose');
 
-  // isi pesan & toggle error class
   toastMsg.textContent = status==='success'
     ? 'Oke berhasil!'
     : 'Terjadi kesalahan!';
   toast.classList.toggle('error', status!=='success');
 
-  // tampilkan dan auto‐hide
   toast.style.display = 'flex';
   setTimeout(()=> toast.style.display = 'none', 3000);
 
-  // tombol close manual
   toastClose.onclick = ()=> toast.style.display = 'none';
 });
 </script>
 
 
-  <!-- TOAST GENERIC -->
 <div id="toast" class="toast">
   <i class="ri-checkbox-circle-line ri-lg text-primary"></i>
   <span id="toastMsg" class="ml-2 text-sm font-medium text-gray-800"></span>
