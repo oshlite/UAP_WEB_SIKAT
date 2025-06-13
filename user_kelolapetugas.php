@@ -1,13 +1,10 @@
 <?php
-// user_kelolapetugas.php
 
-// 1. KONEKSI DATABASE
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) {
   die('DB Error: '.$db->connect_error);
 }
 
-// 2. HANDLE FORM SUBMISSION (ADD / EDIT / DELETE)
 if($_SERVER['REQUEST_METHOD']==='POST') {
   $action = $_POST['action'] ?? '';
   $id     = intval($_POST['id'] ?? 0);
@@ -31,13 +28,11 @@ if($_SERVER['REQUEST_METHOD']==='POST') {
     $ok = (bool)$db->query("DELETE FROM petugas WHERE id=$id");
   }
 
-  // redirect kembali dengan status
   $status = $ok ? 'success' : 'error';
   header("Location: ".basename(__FILE__)."?status={$status}");
   exit;
 }
 
-// 3. AMBIL DATA PETUGAS
 $petugasList = [];
 $res = $db->query("SELECT * FROM petugas ORDER BY id");
 while($r = $res->fetch_assoc()) {
@@ -76,7 +71,6 @@ while($r = $res->fetch_assoc()) {
   </style>
 </head>
 <body class="flex h-screen bg-gray-50">
-  <!-- SIDEBAR -->
   <div class="w-64 bg-white shadow-md hidden md:block">
     <div class="p-4 flex items-center">
       <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -121,9 +115,7 @@ while($r = $res->fetch_assoc()) {
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="flex-1 flex flex-col overflow-hidden">
-    <!-- HEADER & BREADCRUMB -->
     <header class="bg-white shadow-sm z-10">
       <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
         <a href="#" class="text-gray-500">SIKAT</a>
@@ -132,7 +124,6 @@ while($r = $res->fetch_assoc()) {
       </div>
     </header>
 
-    <!-- CONTENT -->
     <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
       <div class="mb-6 flex items-center justify-between">
         <div>
@@ -182,7 +173,6 @@ while($r = $res->fetch_assoc()) {
     </main>
   </div>
 
-  <!-- MODAL ADD/EDIT -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <h2 id="modalTitle" class="text-xl font-medium text-gray-800 mb-4">Tambah Petugas</h2>
@@ -213,7 +203,6 @@ while($r = $res->fetch_assoc()) {
     </div>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="toast">
     <span id="toastMsg" class="text-gray-800 font-medium"></span>
     <button id="toastClose" class="ml-4 text-gray-400"><i class="ri-close-line ri-lg"></i></button>
@@ -233,7 +222,6 @@ while($r = $res->fetch_assoc()) {
           toastMsg   = document.getElementById('toastMsg'),
           toastClose = document.getElementById('toastClose');
 
-    // Show Add Modal
     btnAdd.onclick = ()=>{
       actionIn.value='add';
       idIn.value='';
@@ -241,10 +229,8 @@ while($r = $res->fetch_assoc()) {
       document.getElementById('modalTitle').textContent='Tambah Petugas';
       modal.style.display='block';
     };
-    // Cancel Modal
     btnCancel.onclick = ()=> modal.style.display='none';
 
-    // Edit Buttons
     document.querySelectorAll('.edit-btn').forEach(btn=>{
       btn.onclick = ()=>{
         actionIn.value='edit';
@@ -255,7 +241,6 @@ while($r = $res->fetch_assoc()) {
         modal.style.display='block';
       };
     });
-    // Delete Buttons
     document.querySelectorAll('.delete-btn').forEach(btn=>{
       btn.onclick = ()=>{
         if(!confirm('Apakah yakin ingin menghapus petugas ini?')) return;
@@ -268,10 +253,8 @@ while($r = $res->fetch_assoc()) {
         f.submit();
       };
     });
-    // Toast Close
     toastClose.onclick = ()=> toast.style.display='none';
 
-    // Show Toast from URL param
     const st = new URLSearchParams(location.search).get('status');
     if(st==='success'||st==='error'){
       toastMsg.textContent = st==='success' ? 'Oke berhasil!' : 'Terjadi kesalahan!';

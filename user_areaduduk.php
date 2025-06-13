@@ -1,14 +1,10 @@
 <?php
-// user_areaduduk.php
 
-// 1. KONEKSI
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
 
-// tangkap return param (untuk “kembali ke keperluan”)
 $return = $_GET['return'] ?? '';
 
-// 2. HANDLE FORM (ADD / EDIT / DELETE)
 if($_SERVER['REQUEST_METHOD']==='POST'){
   $action    = $_POST['action']     ?? '';
   $id        = intval($_POST['id']  ?? 0);
@@ -33,7 +29,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     );
   }
 
-  // redirect kembali dengan status + return
   $status = $ok ? 'success' : 'error';
   $loc = basename(__FILE__)."?status=$status";
   if($return==='keperluan') $loc .= "&return=keperluan";
@@ -41,7 +36,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   exit;
 }
 
-// 3. FETCH DATA AREA
 $areas = [];
 $res = $db->query("SELECT * FROM area_duduk ORDER BY id");
 while($r = $res->fetch_assoc()){
@@ -76,7 +70,6 @@ while($r = $res->fetch_assoc()){
     .sidebar-item.active{background:rgba(255,215,0,.1);border-left:3px solid #FFD700}
   </style>
 </head><body class="flex h-screen bg-gray-50">
-  <!-- SIDEBAR -->
   <div class="w-64 bg-white shadow-md hidden md:block">
     <div class="p-4 flex items-center">
       <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
@@ -109,7 +102,6 @@ while($r = $res->fetch_assoc()){
     </div>
   </div>
 
-  <!-- MAIN -->
   <div class="flex-1 flex flex-col overflow-hidden">
     <header class="bg-white shadow-sm z-10">
       <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
@@ -174,7 +166,6 @@ while($r = $res->fetch_assoc()){
     </main>
   </div>
 
-  <!-- MODAL -->
   <div id="modal" class="modal">
     <div class="modal-content">
       <h2 id="modalTitle" class="text-xl font-medium text-gray-800 mb-4">Tambah Area</h2>
@@ -200,7 +191,6 @@ while($r = $res->fetch_assoc()){
     </div>
   </div>
 
-  <!-- TOAST -->
   <div id="toast" class="toast flex">
     <span id="toastMsg" class="text-gray-800 font-medium"></span>
     <button id="toastClose" class="ml-4 text-gray-400"><i class="ri-close-line ri-lg"></i></button>
@@ -220,12 +210,10 @@ while($r = $res->fetch_assoc()){
           toastClose = document.getElementById('toastClose'),
           title      = document.getElementById('modalTitle');
 
-    // Open Add
     btnAdd.onclick = ()=>{
       actionIn.value='add'; idIn.value=''; form.reset();
       title.textContent='Tambah Area'; modal.style.display='block';
     };
-    // Open Edit
     document.querySelectorAll('.edit-btn').forEach(b=>{
       b.onclick=()=>{
         actionIn.value='edit'; idIn.value=b.dataset.id;
@@ -233,7 +221,6 @@ while($r = $res->fetch_assoc()){
         title.textContent='Edit Area'; modal.style.display='block';
       };
     });
-    // Delete
     document.querySelectorAll('.delete-btn').forEach(b=>{
       b.onclick=()=>{
         if(!confirm('Hapus area ini?')) return;
@@ -246,11 +233,8 @@ while($r = $res->fetch_assoc()){
         f.submit();
       };
     });
-    // Cancel
     btnCancel.onclick = ()=> modal.style.display='none';
-    // Toast Close
     toastClose.onclick = ()=> toast.style.display='none';
-    // Show toast
     const st = new URLSearchParams(location.search).get('status');
     if(st==='success'||st==='error'){
       toastMsg.textContent = st==='success' ? 'Berhasil!' : 'Terjadi kesalahan!';
