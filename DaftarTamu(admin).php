@@ -269,9 +269,9 @@ $data = $stmt->fetchAll();
         <label class="block text-sm font-medium text-gray-700">Area</label>
         <select name="area" required class="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2">
           <option value="">- Pilih Area -</option>
-          <option value="Lobi" <?= $edit_data['area'] == 'Lobi' ? 'selected' : '' ?>>Lobi</option>
-          <option value="Meeting Room" <?= $edit_data['area'] == 'Meeting Room' ? 'selected' : '' ?>>Meeting Room</option>
-          <option value="Ruang Tamu" <?= $edit_data['area'] == 'Ruang Tamu' ? 'selected' : '' ?>>Ruang Tamu</option>
+          <option value="Pengantin Pria" <?= $edit_data['area'] == 'Pengantin Pria' ? 'selected' : '' ?>>Pengantin Pria</option>
+          <option value="Pengantin Wanita" <?= $edit_data['area'] == 'Pengantin Wanita' ? 'selected' : '' ?>>Pengantin Wanita</option>
+          <option value="Tamu luar provinsi" <?= $edit_data['area'] == 'Tamu luar provinsi' ? 'selected' : '' ?>>Tamu luar provinsi</option>
         </select>
       </div>
 
@@ -300,7 +300,7 @@ $data = $stmt->fetchAll();
     </form>
     <?php else: ?>
     <div class="mb-6">
-      <a href="tambah_tamu.php" class="bg-primary hover:bg-yellow-400 text-white font-semibold px-4 py-2 rounded-button inline-block">
+      <a href="Tambah_Tamu(admin).php" class="bg-primary hover:bg-yellow-400 text-white font-semibold px-4 py-2 rounded-button inline-block">
         + Tambah Tamu
       </a>
     </div>
