@@ -113,74 +113,76 @@
 </head>
 <body>
     <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <aside class="sidebar w-64 h-full flex-shrink-0 hidden md:block overflow-y-auto">
-            <div class="p-4 flex items-center justify-center border-b border-gray-100">
-                <span class="font-['Pacifico'] text-2xl text-primary">SIKAT</span>
-            </div>
-            
-            <div class="py-4">
-                <div class="px-4 py-2 text-xs text-gray-400 uppercase font-semibold">Menu Utama</div>
-                
-                <a href="#" class="nav-item active flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-dashboard-line"></i>
-                    </div>
-                    <span>Dashboard</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-user-3-line"></i>
-                    </div>
-                    <span>Manajemen Tamu</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-file-list-3-line"></i>
-                    </div>
-                    <span>Keperluan Kunjungan</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-map-pin-line"></i>
-                    </div>
-                    <span>Area Duduk</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-team-line"></i>
-                    </div>
-                    <span>Petugas</span>
-                </a>
-                
-                <div class="px-4 py-2 mt-4 text-xs text-gray-400 uppercase font-semibold">Pengaturan</div>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-user-settings-line"></i>
-                    </div>
-                    <span>Pengguna</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-file-chart-line"></i>
-                    </div>
-                    <span>Laporan</span>
-                </a>
-                
-                <a href="#" class="nav-item flex items-center px-4 py-3 text-gray-700">
-                    <div class="w-6 h-6 flex items-center justify-center mr-3">
-                        <i class="ri-settings-3-line"></i>
-                    </div>
-                    <span>Pengaturan</span>
-                </a>
-            </div>
-        </aside>
+
+ <?php $currentPage = basename($_SERVER['PHP_SELF']); ?>
+
+<!-- Sidebar -->
+<aside class="sidebar w-64 h-full flex-shrink-0 hidden md:block overflow-y-auto bg-white shadow-md">
+  <div class="p-4 flex items-center justify-center border-b border-gray-100">
+    <span class="font-['Pacifico'] text-2xl text-primary">SIKAT</span>
+  </div>
+  <div class="py-4">
+    <div class="px-4 py-2 text-xs text-gray-400 uppercase font-semibold">Menu Utama</div>
+
+    <a href="eoadmin_dashboard.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'eoadmin_dashboard.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-dashboard-line"></i>
+      </div>
+      <span>Dashboard</span>
+    </a>
+
+    <a href="DaftarTamu(admin).php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'DaftarTamu(admin).php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-user-3-line"></i>
+      </div>
+      <span>Manajemen Tamu</span>
+    </a>
+
+    <a href="keperluan.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'keperluan.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-file-list-3-line"></i>
+      </div>
+      <span>Keperluan Kunjungan</span>
+    </a>
+
+    <a href="area.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'area.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <span>Area Duduk</span>
+    </a>
+
+    <a href="petugas.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'petugas.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-team-line"></i>
+      </div>
+      <span>Petugas</span>
+    </a>
+
+    <div class="px-4 py-2 mt-4 text-xs text-gray-400 uppercase font-semibold">Pengaturan</div>
+
+    <a href="pengguna.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'pengguna.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-user-settings-line"></i>
+      </div>
+      <span>Pengguna</span>
+    </a>
+
+    <a href="laporan.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'laporan.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-file-chart-line"></i>
+      </div>
+      <span>Laporan</span>
+    </a>
+
+    <a href="pengaturan.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'pengaturan.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
+      <div class="w-6 h-6 flex items-center justify-center mr-3">
+        <i class="ri-settings-3-line"></i>
+      </div>
+      <span>Pengaturan</span>
+    </a>
+  </div>
+</aside>
         
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
@@ -367,230 +369,7 @@
                 </div>
                 
                 <!-- Recent Guests Table -->
-                <div class="card rounded-md overflow-hidden">
-                    <div class="p-6 border-b border-gray-100">
-                        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-                            <h3 class="text-lg font-medium text-gray-800">Daftar Tamu Terbaru</h3>
-                            
-                            <div class="mt-4 md:mt-0 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <div class="w-4 h-4 flex items-center justify-center text-gray-400">
-                                            <i class="ri-search-line"></i>
-                                        </div>
-                                    </div>
-                                    <input type="search" class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-button pl-10 pr-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary w-full" placeholder="Cari tamu...">
-                                </div>
-                                
-                                <div class="relative">
-                                    <select class="bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-button px-4 py-2 pr-8 focus:outline-none focus:ring-1 focus:ring-primary appearance-none w-full">
-                                        <option>Semua Area</option>
-                                        <option>Meja Keluarga Wanita</option>
-                                        <option>Meja Keluarga Pria</option>
-                                        <option>Meja VIP</option>
-                                        <option>Area Umum</option>
-                                        <option>Meja Tamu Luar Provinsi</option>
-                                        <option>Meja Komunitas</option>
-                                    </select>
-                                    <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                                        <div class="w-4 h-4 flex items-center justify-center text-gray-400">
-                                            <i class="ri-arrow-down-s-line"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Tamu</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Area Duduk</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Waktu Kedatangan</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-100">
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20woman%20in%20formal%20attire%2C%2040s%2C%20neutral%20background%2C%20high%20quality&width=40&height=40&seq=2&orientation=squarish" class="w-8 h-8 rounded-full object-cover mr-3">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Ratna Dewi</div>
-                                                <div class="text-xs text-gray-500">Keluarga Wanita</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Keluarga</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Meja Keluarga Wanita</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">09 Jun 2025, 10:15</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hadir</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex space-x-2">
-                                            <button class="text-blue-600 hover:text-blue-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-edit-line"></i>
-                                                </div>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20man%20in%20formal%20attire%2C%2035s%2C%20neutral%20background%2C%20high%20quality&width=40&height=40&seq=3&orientation=squarish" class="w-8 h-8 rounded-full object-cover mr-3">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Agus Purnomo</div>
-                                                <div class="text-xs text-gray-500">Teman Pria</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Teman</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Area Umum</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">09 Jun 2025, 10:22</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hadir</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex space-x-2">
-                                            <button class="text-blue-600 hover:text-blue-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-edit-line"></i>
-                                                </div>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20woman%20in%20formal%20attire%2C%2030s%2C%20neutral%20background%2C%20high%20quality&width=40&height=40&seq=4&orientation=squarish" class="w-8 h-8 rounded-full object-cover mr-3">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Siti Nurhayati</div>
-                                                <div class="text-xs text-gray-500">Luar Provinsi</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Keluarga</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Meja Tamu Luar Provinsi</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">09 Jun 2025, 10:30</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hadir</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex space-x-2">
-                                            <button class="text-blue-600 hover:text-blue-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-edit-line"></i>
-                                                </div>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20man%20in%20formal%20attire%2C%2050s%2C%20neutral%20background%2C%20high%20quality&width=40&height=40&seq=5&orientation=squarish" class="w-8 h-8 rounded-full object-cover mr-3">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Hendra Wijaya</div>
-                                                <div class="text-xs text-gray-500">Keluarga Pria</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Keluarga</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Meja Keluarga Pria</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">09 Jun 2025, 10:45</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hadir</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex space-x-2">
-                                            <button class="text-blue-600 hover:text-blue-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-edit-line"></i>
-                                                </div>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <div class="flex items-center">
-                                            <img src="https://readdy.ai/api/search-image?query=professional%20headshot%20of%20Indonesian%20woman%20in%20formal%20attire%2C%2045s%2C%20neutral%20background%2C%20high%20quality&width=40&height=40&seq=6&orientation=squarish" class="w-8 h-8 rounded-full object-cover mr-3">
-                                            <div>
-                                                <div class="text-sm font-medium text-gray-900">Maya Indah</div>
-                                                <div class="text-xs text-gray-500">Rekan Kerja</div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Rekan</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Meja VIP</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">09 Jun 2025, 11:05</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Menunggu</span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
-                                        <div class="flex space-x-2">
-                                            <button class="text-blue-600 hover:text-blue-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-edit-line"></i>
-                                                </div>
-                                            </button>
-                                            <button class="text-red-600 hover:text-red-800">
-                                                <div class="w-5 h-5 flex items-center justify-center">
-                                                    <i class="ri-delete-bin-line"></i>
-                                                </div>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-                        <div class="text-sm text-gray-500">
-                            Menampilkan 5 dari 187 tamu
-                        </div>
-                        
-                        <div class="flex space-x-1">
-                            <button class="px-3 py-1 rounded-button border border-gray-200 text-gray-500 text-sm">Sebelumnya</button>
-                            <button class="px-3 py-1 rounded-button bg-primary text-white text-sm">1</button>
-                            <button class="px-3 py-1 rounded-button border border-gray-200 text-gray-500 text-sm">2</button>
-                            <button class="px-3 py-1 rounded-button border border-gray-200 text-gray-500 text-sm">3</button>
-                            <button class="px-3 py-1 rounded-button border border-gray-200 text-gray-500 text-sm">Selanjutnya</button>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
+
 
     <script id="chartInitialization">
         document.addEventListener('DOMContentLoaded', function() {
