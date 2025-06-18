@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $redirect_url = 'index.php'; // Default redirect
                 switch($user['role']) {
                     case 'admin':
-                        $redirect_url = 'eoadmin_dashboard.php';
+                        $redirect_url = 'admin/eoadmin_dashboard.php';
                         break;
                     case 'petugas':
                         $redirect_url = 'petugastamu_dashboard.php';
