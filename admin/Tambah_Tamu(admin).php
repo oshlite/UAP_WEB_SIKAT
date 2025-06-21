@@ -1,136 +1,130 @@
 <?php
-// ---------- KONEKSI PDO ----------
-$host   = 'localhost';
-$db     = 'database_sikatbukutamu';
-$user   = 'root';
-$pass   = '';
-$charset= 'utf8mb4';
+/* ---------- KONEKSI DATABASE ---------- */
+$pdo = new PDO(
+    "mysql:host=localhost;dbname=database_sikatbukutamu;charset=utf8mb4",
+    'root','',
+    [PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE=>PDO::FETCH_ASSOC]
+);
 
-$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-];
-try {
-    $pdo = new PDO($dsn, $user, $pass, $options);
-} catch (PDOException $e) {
-    exit('DB Connection Failed: ' . $e->getMessage());
-}
+/* ---------- DATA DROP‑DOWN ---------- */
+$keperluans = $pdo->query("SELECT nama FROM keperluan_kunjungan ORDER BY nama")->fetchAll(PDO::FETCH_COLUMN);
+$areas      = $pdo->query("SELECT nama_area FROM area_duduk ORDER BY nama_area")->fetchAll(PDO::FETCH_COLUMN);
 
-// ---------- SIMPAN DATA BARU ----------
+/* ---------- SIMPAN TAMU BIASA ---------- */
 if (isset($_POST['simpan'])) {
-    $nama          = $_POST['nama'];
-    $keperluan     = $_POST['keperluan'];
-    $area          = $_POST['area'];
-    $luar_provinsi = $_POST['luar_provinsi'];
-    $waktu         = $_POST['waktu'];
-
-    $sql = "INSERT INTO tamu (nama, keperluan, area, luar_provinsi, waktu)
-            VALUES (?,?,?,?,?)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$nama, $keperluan, $area, $luar_provinsi, $waktu]);
-
-    header("Location: DaftarTamu(admin).php");
-    exit;
+    $pdo->prepare("INSERT INTO tamu (nama, keperluan, area, luar_provinsi, waktu)
+                   VALUES (?,?,?,?,?)")
+        ->execute([
+            $_POST['nama'], $_POST['keperluan'], $_POST['area'],
+            $_POST['luar_provinsi'], $_POST['waktu']
+        ]);
+    header("Location: DaftarTamu(admin).php"); exit;
 }
 
-// ---------- BATAL ----------
+/* ---------- SIMPAN TAMU PRIORITAS ---------- */
+if (isset($_POST['simpan_prio'])) {
+    $pdo->prepare("INSERT INTO tamu_prio (name, kategori, waktu)
+                   VALUES (?,?,?)")
+        ->execute([
+            $_POST['nama'],           // kolom name
+            $_POST['keperluan'],      // kolom kategori
+            $_POST['waktu']
+        ]);
+    header("Location: DaftarTamu(admin).php"); exit;
+}
+
+/* ---------- BATAL ---------- */
 if (isset($_POST['batal'])) {
-    header("Location: DaftarTamu(admin).php");
-    exit;
+    header("Location: DaftarTamu(admin).php"); exit;
 }
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tambah Tamu - SIKAT</title>
-  <script src="https://cdn.tailwindcss.com/3.4.16"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: { primary: '#FFD700', secondary: '#FFDAB9' },
-          borderRadius: { button: '8px' },
-        }
-      }
-    }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Poppins', sans-serif; background-color: #FFFAF0; }
-    .card { background:white; box-shadow:0 4px 12px rgba(0,0,0,.05); }
-  </style>
+  <title>Tambah Tamu & Tamu Prioritas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen flex items-center justify-center px-4">
+<body class="bg-yellow-50 min-h-screen flex items-center justify-center">
+  <div class="bg-white shadow-md p-8 rounded-xl w-full max-w-lg">
+    <h2 class="text-2xl font-bold mb-6 text-center">Form Tambah Tamu</h2>
 
-  <div class="card w-full max-w-xl p-8 rounded-2xl">
-    <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Tambah Tamu</h2>
+    <!-- ==== FORM ==== -->
+    <form method="POST" class="grid gap-4">
 
-    <form method="POST" class="grid grid-cols-1 gap-4">
-      <!-- Nama -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Nama</label>
-        <input type="text" name="nama" required
-               class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2" />
+      <!-- JENIS TAMU -->
+      <div class="flex items-center justify-center gap-6 mb-2">
+        <label class="inline-flex items-center gap-2">
+          <input type="radio" name="jenis" value="biasa" checked
+                 class="accent-yellow-500">
+          <span>Tamu Biasa</span>
+        </label>
+        <label class="inline-flex items-center gap-2">
+          <input type="radio" name="jenis" value="prio"
+                 class="accent-yellow-500">
+          <span>Tamu Prioritas</span>
+        </label>
       </div>
 
-      <!-- Keperluan -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Keperluan</label>
-        <select name="keperluan" required
-                class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2">
-          <option value="">-- Pilih Keperluan --</option>
-          <option value="Keluarga">Keluarga</option>
-          <option value="Teman">Teman</option>
-          <option value="Rekan">Rekan</option>
-        </select>
-      </div>
+      <input type="text" name="nama" required placeholder="Nama Tamu"
+             class="w-full border rounded px-3 py-2" />
 
-      <!-- Area -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Area</label>
-        <select name="area" required
-                class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2">
-          <option value="">- Pilih Area -</option>
-          <option value="Pengantin Pria">Pengantin Pria</option>
-          <option value="Pengantin Wanitas">Pengantin Wanita</option>
-          <option value="Tamu luar provinsi">Tamu luar provinsi</option>
-        </select>
-      </div>
+      <!-- Keperluan / Kategori -->
+      <select name="keperluan" required class="w-full border rounded px-3 py-2">
+        <option value="">-- Pilih Keperluan/Kategori --</option>
+        <?php foreach ($keperluans as $k): ?>
+          <option><?= htmlspecialchars($k) ?></option>
+        <?php endforeach; ?>
+      </select>
 
-      <!-- Luar Provinsi -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Luar Provinsi</label>
-        <select name="luar_provinsi" required
-                class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2">
-          <option value="">- Pilih -</option>
-          <option value="Ya">Ya</option>
-          <option value="Tidak">Tidak</option>
-        </select>
-      </div>
+      <!-- Area (hanya relevan utk tamu biasa, tapi tidak masalah di‑POST) -->
+      <select name="area" class="w-full border rounded px-3 py-2">
+        <option value="">-- Pilih Area Duduk --</option>
+        <?php foreach ($areas as $a): ?>
+          <option><?= htmlspecialchars($a) ?></option>
+        <?php endforeach; ?>
+      </select>
 
-      <!-- Waktu -->
-      <div>
-        <label class="block text-sm font-medium text-gray-700">Waktu</label>
-        <input type="datetime-local" name="waktu" required
-               class="mt-1 w-full border border-gray-300 rounded-md px-3 py-2" />
-      </div>
+      <!-- Luar Provinsi (hanya utk tamu biasa) -->
+      <select name="luar_provinsi" class="w-full border rounded px-3 py-2">
+        <option value="">-- Luar Provinsi? --</option>
+        <option>Ya</option>
+        <option>Tidak</option>
+      </select>
 
-      <!-- Tombol -->
+      <input type="datetime-local" name="waktu"
+             value="<?= date('Y-m-d\TH:i') ?>"
+             class="w-full border rounded px-3 py-2" required>
+
+      <!-- TOMBOL -->
       <div class="flex justify-between mt-4">
-        <button type="submit" name="simpan"
-                class="bg-primary hover:bg-yellow-400 text-white font-semibold px-6 py-2 rounded-button">
-          Simpan
-        </button>
-        <button type="submit" name="batal"
-                class="text-gray-600 hover:text-black font-semibold px-6 py-2 border border-gray-300 rounded-button">
-          Batal
-        </button>
+        <!-- JavaScript akan menentukan tombol mana yang diklik -->
+        <button id="btnSimpan"  name="simpan"      class="bg-yellow-500 text-white px-4 py-2 rounded">Simpan</button>
+        <button id="btnSimpanP"name="simpan_prio" class="bg-yellow-500 text-white px-4 py-2 rounded hidden">Simpan</button>
+        <button name="batal" class="bg-gray-300 text-black px-4 py-2 rounded">Batal</button>
       </div>
     </form>
   </div>
 
+  <script>
+    // ganti tombol submit sesuai radio
+    const radioBiasa = document.querySelector('input[value="biasa"]');
+    const radioPrio  = document.querySelector('input[value="prio"]');
+    const btnBiasa   = document.getElementById('btnSimpan');
+    const btnPrio    = document.getElementById('btnSimpanP');
+
+    function toggleButtons() {
+      if (radioPrio.checked) {
+        btnPrio.classList.remove('hidden');
+        btnBiasa.classList.add('hidden');
+      } else {
+        btnBiasa.classList.remove('hidden');
+        btnPrio.classList.add('hidden');
+      }
+    }
+    radioBiasa.addEventListener('change', toggleButtons);
+    radioPrio.addEventListener('change', toggleButtons);
+    toggleButtons();
+  </script>
 </body>
 </html>

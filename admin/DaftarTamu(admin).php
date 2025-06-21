@@ -52,22 +52,38 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   <meta charset="UTF-8">
   <title>Manajemen Tamu</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>tailwind.config={theme:{extend:{colors:{primary:'#FACC15'}}}}</script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            gold: '#FFD700',
+            'gold-dark': '#E5B600',
+            peach: '#FFDAB9',
+            primary: '#FACC15'
+          },
+          fontFamily: {
+            sans: ['Poppins', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            script: ['Pacifico', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&family=Playfair+Display&family=Pacifico&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen bg-yellow-50">
+<body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 min-h-screen font-sans">
   <div class="flex">
+    <?php include 'sidebar.php'; ?>
 
-    <!-- ===== SIDEBAR ===== -->
-<?php include 'sidebar.php'; ?>
-    <!-- ===== MAIN ===== -->
     <main class="flex-1 p-8 space-y-10">
-      <h1 class="text-3xl font-bold">Manajemen Tamu</h1>
+      <h1 class="text-3xl font-serif text-gold mb-4">Manajemen Tamu</h1>
 
-      <!-- ===== FORM EDIT TAMU ===== -->
       <?php if ($edit): ?>
-      <form method="POST" class="bg-white p-6 rounded-xl shadow-md max-w-xl">
-        <h2 class="text-xl font-semibold mb-4">Edit Tamu</h2>
+      <form method="POST" class="bg-white p-6 rounded-xl shadow-md max-w-xl border border-gold">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit Tamu</h2>
         <input type="hidden" name="id" value="<?= $edit['id'] ?>">
         <input type="text" name="nama" value="<?= htmlspecialchars($edit['nama']) ?>" class="w-full mb-3 border rounded px-3 py-2" required>
         <select name="keperluan" required class="w-full mb-3 border rounded px-3 py-2">
@@ -89,16 +105,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </select>
         <input type="datetime-local" name="waktu" value="<?= date('Y-m-d\TH:i',strtotime($edit['waktu'])) ?>" class="w-full mb-3 border rounded px-3 py-2" required>
         <div class="flex justify-between">
-          <button name="simpan" class="bg-primary text-white px-4 py-2 rounded">Update</button>
+          <button name="simpan" class="bg-gold-dark text-white px-4 py-2 rounded hover:bg-gold">Update</button>
           <a href="<?= $_SERVER['PHP_SELF'] ?>" class="bg-gray-300 text-black px-4 py-2 rounded">Batal</a>
         </div>
       </form>
       <?php endif; ?>
 
-      <!-- ===== FORM EDIT TAMU PRIO ===== -->
       <?php if ($editPrio): ?>
-      <form method="POST" class="bg-white p-6 rounded-xl shadow-md max-w-xl">
-        <h2 class="text-xl font-semibold mb-4">Edit Tamu Prioritas</h2>
+      <form method="POST" class="bg-white p-6 rounded-xl shadow-md max-w-xl border border-gold">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit Tamu Prioritas</h2>
         <input type="hidden" name="id_prio" value="<?= $editPrio['id'] ?>">
         <input type="text" name="name" value="<?= htmlspecialchars($editPrio['name']) ?>" class="w-full mb-3 border rounded px-3 py-2" required>
         <select name="kategori" required class="w-full mb-3 border rounded px-3 py-2">
@@ -109,22 +124,20 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </select>
         <input type="datetime-local" name="waktu" value="<?= date('Y-m-d\TH:i',strtotime($editPrio['waktu'])) ?>" class="w-full mb-3 border rounded px-3 py-2" required>
         <div class="flex justify-between">
-          <button name="simpan_prio" class="bg-primary text-white px-4 py-2 rounded">Update</button>
+          <button name="simpan_prio" class="bg-gold-dark text-white px-4 py-2 rounded hover:bg-gold">Update</button>
           <a href="<?= $_SERVER['PHP_SELF'] ?>" class="bg-gray-300 text-black px-4 py-2 rounded">Batal</a>
         </div>
       </form>
       <?php endif; ?>
 
-      <!-- ===== TOMBOL TAMBAH (opsional) ===== -->
       <div class="space-x-4">
-        <a href="Tambah_Tamu(admin).php"      class="bg-primary text-white px-4 py-2 rounded hover:bg-yellow-400">+ Tambah Tamu</a>
+        <a href="Tambah_Tamu(admin).php" class="bg-gold-dark text-white px-4 py-2 rounded hover:bg-gold">+ Tambah Tamu</a>
       </div>
 
-      <!-- ===== TABEL TAMU ===== -->
       <section>
-        <h2 class="text-2xl font-semibold mb-4">Daftar Tamu</h2>
+        <h2 class="text-2xl font-serif text-gray-700 mb-4">Daftar Tamu</h2>
         <div class="overflow-x-auto">
-          <table class="w-full table-auto bg-white shadow rounded-xl">
+          <table class="w-full table-auto bg-white shadow rounded-xl border border-gold">
             <thead class="bg-yellow-100">
               <tr>
                 <th class="px-4 py-2 text-left">No</th>
@@ -156,11 +169,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
       </section>
 
-      <!-- ===== TABEL TAMU PRIORITAS ===== -->
       <section>
-        <h2 class="text-2xl font-semibold mt-10 mb-4">Daftar Tamu Prioritas</h2>
+        <h2 class="text-2xl font-serif text-gray-700 mt-10 mb-4">Daftar Tamu Prioritas</h2>
         <div class="overflow-x-auto">
-          <table class="w-full table-auto bg-white shadow rounded-xl">
+          <table class="w-full table-auto bg-white shadow rounded-xl border border-gold">
             <thead class="bg-yellow-100">
               <tr>
                 <th class="px-4 py-2 text-left">No</th>
@@ -187,7 +199,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           </table>
         </div>
       </section>
-
     </main>
   </div>
 </body>
