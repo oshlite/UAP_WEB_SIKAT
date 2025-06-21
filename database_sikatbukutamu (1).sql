@@ -131,12 +131,11 @@ INSERT INTO `tamu` (`id`, `nama`, `keperluan`, `area`, `luar_provinsi`, `waktu`)
 --
 
 CREATE TABLE `tamu_prio` (
-  `id` int UNSIGNED NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `kategori` varchar(100) NOT NULL,
-  `waktucreate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `waktuupdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `kategori` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `waktu` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `tamu_prio`
