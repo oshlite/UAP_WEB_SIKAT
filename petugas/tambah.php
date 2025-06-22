@@ -7,8 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $area = $_POST['area'] ?? '';
     $luar_provinsi = isset($_POST['luar_provinsi']) ? 1 : 0;
 
-    $sql = "INSERT INTO petugas (nama, keperluan, area, luar_provinsi) 
-            VALUES (:nama, :keperluan, :area, :luar_provinsi)";
+    $sql = "INSERT INTO tamu (nama, keperluan, area, luar_provinsi, waktu) 
+            VALUES (:nama, :keperluan, :area, :luar_provinsi, NOW())";
 
     $stmt = $pdo->prepare($sql);
     $stmt->execute([
@@ -17,9 +17,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ':area' => $area,
         ':luar_provinsi' => $luar_provinsi
     ]);
+
     header('Location: bukuTamu.php');
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -55,11 +57,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 <div>
                     <label class="block mb-1 font-medium text-gray-700">Keperluan</label>
-                    <input
-                        type="text"
+                    <select
                         name="keperluan"
                         required
                         class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400">
+                        <option value="" disabled selected>Pilih Keperluan</option>
+                        <option value="Teman">Teman</option>
+                        <option value="Keluarga">Keluarga</option>
+                        <option value="Rekan">Rekan</option>
+                    </select>
                 </div>
 
                 <div>
