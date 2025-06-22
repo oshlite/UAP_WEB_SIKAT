@@ -1,4 +1,5 @@
 <?php
+include 'protect_user.php';
 
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) {
@@ -65,56 +66,10 @@ while($r = $res->fetch_assoc()) {
     .modal-content { background:#fff; margin:10% auto; padding:24px; border-radius:12px; width:400px; max-width:90%; }
     .toast { display:none; position:fixed; top:20px; right:20px; background:#fff; border-left:4px solid #FFD700; padding:16px; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,0.1); z-index:60; }
     .toast.error { border-color:#F87171; }
-    .sidebar-item { transition:all .2s ease; }
-    .sidebar-item:hover { background:rgba(255,218,185,.2); }
-    .sidebar-item.active { background:rgba(255,215,0,.1); border-left:3px solid #FFD700; }
   </style>
 </head>
 <body class="flex h-screen bg-gray-50">
-  <div class="w-64 bg-white shadow-md hidden md:block">
-    <div class="p-4 flex items-center">
-      <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
-      user_tamuprio<span class="ml-2 text-xs bg-secondary bg-opacity-30 text-gray-700 px-2 py-1 rounded-full">User Pengantin</span>
-    </div>
-    <div class="mt-6">
-      <?php
-      $menu = [
-        'Dashboard'=>'ri-dashboard-line',
-        'Manajemen Tamu'=>'ri-user-3-line',
-        'Keperluan Kunjungan'=>'ri-question-answer-line',
-        'Area Duduk'=>'ri-map-pin-line',
-        'Petugas'=>'ri-team-line',
-        'Pengguna'=>'ri-user-settings-line',
-        'Laporan'=>'ri-file-chart-line',
-        'Pengaturan'=>'ri-settings-3-line'
-      ];
-      foreach($menu as $lbl=>$icon): 
-        $active = ($lbl==='Petugas')?' active':'';
-      ?>
-      <div class="sidebar-item<?= $active ?> px-4 py-3 flex items-center">
-        <div class="w-8 h-8 flex items-center justify-center text-<?= $active?'primary':'gray-600' ?>">
-          <i class="<?= $icon ?> ri-lg"></i>
-        </div>
-        <span class="ml-2 text-gray-800"><?= $lbl ?></span>
-      </div>
-      <?php endforeach; ?>
-    </div>
-    <div class="mt-auto p-4 border-t">
-      <div class="flex items-center">
-        <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-          <i class="ri-user-line ri-lg"></i>
-        </div>
-        <div class="ml-3">
-          <p class="text-sm font-medium text-gray-800">Adi Nugroho</p>
-          <p class="text-xs text-gray-500">Administrator</p>
-        </div>
-        <div class="ml-auto w-8 h-8 flex items-center justify-center">
-          <i class="ri-logout-box-r-line text-gray-500"></i>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <?php include 'user_sidebar.php'; ?>
   <div class="flex-1 flex flex-col overflow-hidden">
     <header class="bg-white shadow-sm z-10">
       <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
@@ -123,7 +78,6 @@ while($r = $res->fetch_assoc()) {
         <span class="text-gray-700">Kelola Petugas</span>
       </div>
     </header>
-
     <main class="flex-1 overflow-y-auto p-6 bg-gray-50">
       <div class="mb-6 flex items-center justify-between">
         <div>
@@ -134,7 +88,6 @@ while($r = $res->fetch_assoc()) {
           <i class="ri-add-line mr-2"></i> Tambah Petugas
         </button>
       </div>
-
       <div class="card p-4">
         <div class="overflow-x-auto">
           <table class="w-full text-sm text-left">
@@ -172,7 +125,6 @@ while($r = $res->fetch_assoc()) {
       </div>
     </main>
   </div>
-
   <div id="modal" class="modal">
     <div class="modal-content">
       <h2 id="modalTitle" class="text-xl font-medium text-gray-800 mb-4">Tambah Petugas</h2>
@@ -202,12 +154,10 @@ while($r = $res->fetch_assoc()) {
       </form>
     </div>
   </div>
-
   <div id="toast" class="toast">
     <span id="toastMsg" class="text-gray-800 font-medium"></span>
     <button id="toastClose" class="ml-4 text-gray-400"><i class="ri-close-line ri-lg"></i></button>
   </div>
-
   <script>
   document.addEventListener('DOMContentLoaded', ()=>{
     const modal      = document.getElementById('modal'),

@@ -1,4 +1,5 @@
 <?php
+include 'protect_user.php';
 
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
@@ -11,12 +12,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   $nama_area = $db->real_escape_string($_POST['nama_area'] ?? '');
   $ok = false;
 
-  if($action==='add'){
-    $ok = (bool)$db->query(
-      "INSERT INTO area_duduk (nama_area) VALUES('$nama_area')"
-    );
-  }
-  elseif($action==='edit' && $id){
+  // Hanya izinkan edit dan delete
+  if($action==='edit' && $id){
     $ok = (bool)$db->query(
       "UPDATE area_duduk 
          SET nama_area='$nama_area' 
@@ -70,38 +67,7 @@ while($r = $res->fetch_assoc()){
     .sidebar-item.active{background:rgba(255,215,0,.1);border-left:3px solid #FFD700}
   </style>
 </head><body class="flex h-screen bg-gray-50">
-  <div class="w-64 bg-white shadow-md hidden md:block">
-    <div class="p-4 flex items-center">
-      <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
-      user_tamuprio<span class="ml-2 text-xs bg-secondary bg-opacity-30 text-gray-700 px-2 py-1 rounded-full">User Pengantin</span>
-    </div>
-    <div class="mt-6">
-      <?php 
-      $menu=['Dashboard'=>'ri-dashboard-line','Manajemen Tamu'=>'ri-user-3-line',
-             'Keperluan Kunjungan'=>'ri-question-answer-line','Area Duduk'=>'ri-map-pin-line',
-             'Petugas'=>'ri-team-line','Pengguna'=>'ri-user-settings-line',
-             'Laporan'=>'ri-file-chart-line','Pengaturan'=>'ri-settings-3-line'];
-      foreach($menu as $lbl=>$icon):
-        $active=($lbl==='Area Duduk')?' active':'';
-      ?>
-      <div class="sidebar-item<?= $active ?> px-4 py-3 flex items-center">
-        <i class="<?= $icon ?> ri-lg text-<?= $active?'primary':'gray-600' ?>"></i>
-        <span class="ml-2 text-gray-800"><?= $lbl ?></span>
-      </div>
-      <?php endforeach ?>
-    </div>
-    <div class="mt-auto p-4 border-t flex items-center">
-      <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-        <i class="ri-user-line ri-lg"></i>
-      </div>
-      <div class="ml-3">
-        <p class="text-sm font-medium text-gray-800">Adi Nugroho</p>
-        <p class="text-xs text-gray-500">Administrator</p>
-      </div>
-      <i class="ri-logout-box-r-line text-gray-500 ml-auto"></i>
-    </div>
-  </div>
-
+  <?php include 'user_sidebar.php'; ?>
   <div class="flex-1 flex flex-col overflow-hidden">
     <header class="bg-white shadow-sm z-10">
       <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
@@ -124,11 +90,9 @@ while($r = $res->fetch_assoc()){
       <div class="mb-6 flex items-center justify-between">
         <div>
           <h1 class="text-2xl font-serif font-semibold text-gray-800">Area Duduk</h1>
-          <p class="text-gray-600 text-sm">Tambah / Edit / Hapus area duduk</p>
+          <p class="text-gray-600 text-sm">Edit / Hapus area duduk</p>
         </div>
-        <button id="btnAdd" class="bg-primary text-white px-4 py-2 rounded-lg flex items-center text-sm">
-          <i class="ri-add-line mr-2"></i> Tambah Area
-        </button>
+        <!-- Tombol tambah disembunyikan -->
       </div>
 
       <div class="card p-4">
