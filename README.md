@@ -22,5 +22,6 @@ EO, web untuk petugas, dan juga berbagai fitur tambahan yang kami berikan dalam 
 - PHP Native
 - Tailwind CSS
 - MySQL
+- Vanilla JavaScript
 
 
