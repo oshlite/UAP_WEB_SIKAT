@@ -1,10 +1,13 @@
 <?php
+// Mulai sesi jika belum aktif
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Gunakan koneksi dari file koneksi.php
 require_once('../koneksi.php');
 
+// Periksa apakah user sudah login
 $userId = $_SESSION['user_id'] ?? null;
 
 if (!$userId) {
@@ -12,11 +15,15 @@ if (!$userId) {
     exit;
 }
 
-// Statistik dari database menggunakan PDO
-$totalTamu = $pdo->query("SELECT COUNT(*) FROM tamu")->fetchColumn();
-$totalLuarProvinsi = $pdo->query("SELECT COUNT(*) FROM tamu WHERE luar_provinsi = 'Ya'")->fetchColumn();
-$totalPetugas = $pdo->query("SELECT COUNT(*) FROM petugas")->fetchColumn();
-$totalTamuPrio = $pdo->query("SELECT COUNT(*) FROM tamu_prio")->fetchColumn();
+// Query statistik menggunakan PDO
+try {
+    $totalTamu = $pdo->query("SELECT COUNT(*) FROM tamu")->fetchColumn();
+    $totalLuarProvinsi = $pdo->query("SELECT COUNT(*) FROM tamu WHERE luar_provinsi = 'Ya'")->fetchColumn();
+    $totalPetugas = $pdo->query("SELECT COUNT(*) FROM petugas")->fetchColumn();
+    $totalTamuPrio = $pdo->query("SELECT COUNT(*) FROM tamu_prio")->fetchColumn();
+} catch (PDOException $e) {
+    die("Error mengambil data statistik: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -26,7 +33,7 @@ $totalTamuPrio = $pdo->query("SELECT COUNT(*) FROM tamu_prio")->fetchColumn();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard Admin | SIKAT</title>
 
-  <!-- Tailwind CSS & Custom Style -->
+  <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -120,7 +127,7 @@ $totalTamuPrio = $pdo->query("SELECT COUNT(*) FROM tamu_prio")->fetchColumn();
           y: {
             beginAtZero: true,
             ticks: {
-              precision:0
+              precision: 0
             }
           }
         }

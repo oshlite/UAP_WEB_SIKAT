@@ -1,42 +1,32 @@
 <?php
-// === KONFIGURASI KONEKSI DATABASE LANGSUNG DI SINI ===
-$server = "localhost";
-$user = "root";
-$password = "";
-$nama_database = "database_sikatbukutamu";
+require_once 'auth.php';
+require_once '../koneksi.php'; // pastikan ada variabel $pdo (PDO instance)
 
-$db = mysqli_connect($server, $user, $password, $nama_database);
-if (!$db || !$db instanceof mysqli) {
-    die("Gagal terhubung ke database: " . mysqli_connect_error());
-}
-
-// Proses Hapus
+// Hapus
 if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    mysqli_query($db, "DELETE FROM area_duduk WHERE id=$id");
+    $pdo->prepare("DELETE FROM area_duduk WHERE id = ?")->execute([$_GET['hapus']]);
     header("Location: area.php");
     exit;
 }
 
-// Proses Tambah
+// Tambah
 if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama_area'];
-    mysqli_query($db, "INSERT INTO area_duduk (nama_area) VALUES ('$nama')");
+    $stmt = $pdo->prepare("INSERT INTO area_duduk (nama_area) VALUES (?)");
+    $stmt->execute([$_POST['nama_area']]);
     header("Location: area.php");
     exit;
 }
 
-// Proses Edit
+// Edit
 if (isset($_POST['edit'])) {
-    $id = $_POST['id'];
-    $nama = $_POST['nama_area'];
-    mysqli_query($db, "UPDATE area_duduk SET nama_area='$nama' WHERE id=$id");
+    $stmt = $pdo->prepare("UPDATE area_duduk SET nama_area = ? WHERE id = ?");
+    $stmt->execute([$_POST['nama_area'], $_POST['id']]);
     header("Location: area.php");
     exit;
 }
 
-$area = mysqli_query($db, "SELECT * FROM area_duduk");
-$currentPage = basename($_SERVER['PHP_SELF']);
+// Ambil semua data area duduk
+$area = $pdo->query("SELECT * FROM area_duduk ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -90,16 +80,20 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           </tr>
         </thead>
         <tbody>
-          <?php $no = 1; while ($row = mysqli_fetch_assoc($area)) : ?>
+          <?php foreach ($area as $i => $row): ?>
           <tr class="border-b hover:bg-yellow-50">
-            <td class="px-4 py-2"><?= $no++ ?></td>
+            <td class="px-4 py-2"><?= $i + 1 ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['nama_area']) ?></td>
             <td class="px-4 py-2">
-              <button onclick="editArea(<?= $row['id'] ?>, '<?= addslashes($row['nama_area']) ?>')" class="text-blue-600 hover:underline">Edit</button>
+              <button class="btn-edit text-blue-600 hover:underline"
+                      data-id="<?= $row['id'] ?>"
+                      data-nama="<?= htmlspecialchars($row['nama_area'], ENT_QUOTES) ?>">
+                Edit
+              </button>
               <a href="?hapus=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin hapus?')" class="text-red-600 hover:underline ml-4">Hapus</a>
             </td>
           </tr>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
@@ -132,11 +126,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </div>
 
 <script>
-function editArea(id, nama) {
-  document.getElementById('editId').value = id;
-  document.getElementById('editNama').value = nama;
-  document.getElementById('modalEdit').classList.remove('hidden');
-}
+// Event listener tombol edit
+document.querySelectorAll('.btn-edit').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('editId').value = btn.dataset.id;
+    document.getElementById('editNama').value = btn.dataset.nama;
+    document.getElementById('modalEdit').classList.remove('hidden');
+  });
+});
 </script>
 </body>
 </html>

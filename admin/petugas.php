@@ -1,61 +1,44 @@
 <?php
-// === KONFIGURASI KONEKSI DATABASE LANGSUNG DI SINI ===
-$server = "localhost";
-$user = "root";
-$password = "";
-$nama_database = "database_sikatbukutamu";
+require_once 'auth.php';              // otentikasi login
+require_once '../koneksi.php';        // koneksi PDO => $pdo
 
-$db = mysqli_connect($server, $user, $password, $nama_database);
-if (!$db || !$db instanceof mysqli) {
-    die("Gagal terhubung ke database: " . mysqli_connect_error());
-}
-
-// Proses Hapus
+// ──────── HAPUS DATA ────────
 if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    mysqli_query($db, "DELETE FROM petugas WHERE id=$id");
-    header("Location: petugas.php");
-    exit;
+    $pdo->prepare("DELETE FROM petugas WHERE id = ?")->execute([$_GET['hapus']]);
+    header("Location: petugas.php"); exit;
 }
 
-// Proses Tambah
+// ──────── TAMBAH DATA ────────
 if (isset($_POST['tambah'])) {
-    $nama = $_POST['nama'];
-    $kontak = $_POST['kontak'];
-    mysqli_query($db, "INSERT INTO petugas (nama, kontak) VALUES ('$nama', '$kontak')");
-    header("Location: petugas.php");
-    exit;
+    $stmt = $pdo->prepare("INSERT INTO petugas (nama, kontak) VALUES (?, ?)");
+    $stmt->execute([$_POST['nama'], $_POST['kontak']]);
+    header("Location: petugas.php"); exit;
 }
 
-// Proses Edit
+// ──────── EDIT DATA ────────
 if (isset($_POST['edit'])) {
-    $id = $_POST['id'];
-    $nama = $_POST['nama'];
-    $kontak = $_POST['kontak'];
-    mysqli_query($db, "UPDATE petugas SET nama='$nama', kontak='$kontak' WHERE id=$id");
-    header("Location: petugas.php");
-    exit;
+    $stmt = $pdo->prepare("UPDATE petugas SET nama = ?, kontak = ? WHERE id = ?");
+    $stmt->execute([$_POST['nama'], $_POST['kontak'], $_POST['id']]);
+    header("Location: petugas.php"); exit;
 }
 
-$petugas = mysqli_query($db, "SELECT * FROM petugas");
-$currentPage = basename($_SERVER['PHP_SELF']);
+// ──────── AMBIL SEMUA DATA ────────
+$petugas = $pdo->query("SELECT * FROM petugas ORDER BY id ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Petugas - SIKAT</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            gold: '#FFD700',
-            'gold-dark': '#E5B600',
-            peach: '#FFDAB9',
-            primary: '#FFD700'
+            gold: '#FFD700', 'gold-dark': '#E5B600', peach: '#FFDAB9'
           },
           fontFamily: {
             sans: ['Poppins', 'sans-serif'],
@@ -75,11 +58,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
   <?php include 'sidebar.php'; ?>
+
+  <!-- MAIN SECTION -->
   <main class="flex-1 p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-serif text-gold">Data Petugas</h1>
       <button onclick="document.getElementById('modalTambah').classList.remove('hidden')" class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded-button shadow">+ Tambah Petugas</button>
     </div>
+
     <div class="bg-white rounded-2xl border border-gold shadow overflow-x-auto">
       <table class="w-full text-sm">
         <thead class="bg-yellow-100">
@@ -91,24 +77,31 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           </tr>
         </thead>
         <tbody>
-          <?php $no = 1; while ($row = mysqli_fetch_assoc($petugas)) : ?>
+          <?php foreach ($petugas as $no => $row): ?>
           <tr class="border-b hover:bg-yellow-50">
-            <td class="px-4 py-2"><?= $no++ ?></td>
+            <td class="px-4 py-2"><?= $no + 1 ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['kontak']) ?></td>
             <td class="px-4 py-2">
-              <button onclick="editPetugas(<?= $row['id'] ?>, '<?= addslashes($row['nama']) ?>', '<?= addslashes($row['kontak']) ?>')" class="text-blue-600 hover:underline">Edit</button>
-              <a href="?hapus=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin hapus?')" class="text-red-600 hover:underline ml-4">Hapus</a>
+              <button class="btn-edit text-blue-600 hover:underline"
+                      data-id="<?= $row['id'] ?>"
+                      data-nama="<?= htmlspecialchars($row['nama'], ENT_QUOTES) ?>"
+                      data-kontak="<?= htmlspecialchars($row['kontak'], ENT_QUOTES) ?>">
+                Edit
+              </button>
+              <a href="?hapus=<?= $row['id'] ?>"
+                 onclick="return confirm('Yakin ingin hapus?')"
+                 class="text-red-600 hover:underline ml-4">Hapus</a>
             </td>
           </tr>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </main>
 </div>
 
-<!-- Modal Tambah -->
+<!-- MODAL TAMBAH -->
 <div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
   <form method="POST" class="bg-white p-6 rounded-xl shadow-lg w-96 border border-gold">
     <h2 class="text-xl font-semibold text-gray-700 mb-4">Tambah Petugas</h2>
@@ -121,7 +114,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   </form>
 </div>
 
-<!-- Modal Edit -->
+<!-- MODAL EDIT -->
 <div id="modalEdit" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
   <form method="POST" class="bg-white p-6 rounded-xl shadow-lg w-96 border border-gold">
     <input type="hidden" name="id" id="editId">
@@ -136,12 +129,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </div>
 
 <script>
-function editPetugas(id, nama, kontak) {
-  document.getElementById('editId').value = id;
-  document.getElementById('editNama').value = nama;
-  document.getElementById('editKontak').value = kontak;
-  document.getElementById('modalEdit').classList.remove('hidden');
-}
+// JS Edit Event
+document.querySelectorAll('.btn-edit').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('editId').value = btn.dataset.id;
+    document.getElementById('editNama').value = btn.dataset.nama;
+    document.getElementById('editKontak').value = btn.dataset.kontak;
+    document.getElementById('modalEdit').classList.remove('hidden');
+  });
+});
 </script>
 </body>
 </html>

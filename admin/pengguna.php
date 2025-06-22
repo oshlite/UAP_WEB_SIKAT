@@ -1,48 +1,45 @@
 <?php
-// === KONFIGURASI KONEKSI DATABASE LANGSUNG DI SINI ===
-$server = "localhost";
-$user = "root";
-$password = "";
-$nama_database = "database_sikatbukutamu";
+/******************************************************************
+ *  CRUD PENGGUNA  –  SIKAT  (PDO + Tailwind)
+ ******************************************************************/
+require_once 'auth.php';          // validasi login
+require_once '../koneksi.php';    // menghasilkan objek PDO $pdo
 
-$db = mysqli_connect($server, $user, $password, $nama_database);
-if (!$db || !$db instanceof mysqli) {
-    die("Gagal terhubung ke database: " . mysqli_connect_error());
-}
-
-// Proses Hapus
+/* ──────── 1. Hapus ──────── */
 if (isset($_GET['hapus'])) {
-    $id = $_GET['hapus'];
-    mysqli_query($db, "DELETE FROM users WHERE id=$id");
-    header("Location: pengguna.php");
-    exit;
+    $pdo->prepare("DELETE FROM users WHERE id = ?")
+        ->execute([$_GET['hapus']]);
+    header("Location: pengguna.php"); exit;
 }
 
-// Proses Tambah
+/* ──────── 2. Tambah ──────── */
 if (isset($_POST['tambah'])) {
-    $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    mysqli_query($db, "INSERT INTO users (username, password) VALUES ('$username', '$password')");
-    header("Location: pengguna.php");
-    exit;
+    $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
+    $stmt->execute([
+        $_POST['username'],
+        password_hash($_POST['password'], PASSWORD_DEFAULT)
+    ]);
+    header("Location: pengguna.php"); exit;
 }
 
-// Proses Edit
+/* ──────── 3. Edit ──────── */
 if (isset($_POST['edit'])) {
-    $id = $_POST['id'];
-    $username = $_POST['username'];
     if (!empty($_POST['password'])) {
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        mysqli_query($db, "UPDATE users SET username='$username', password='$password' WHERE id=$id");
+        $sql  = "UPDATE users SET username = ?, password = ? WHERE id = ?";
+        $args = [$_POST['username'],
+                 password_hash($_POST['password'], PASSWORD_DEFAULT),
+                 $_POST['id']];
     } else {
-        mysqli_query($db, "UPDATE users SET username='$username' WHERE id=$id");
+        $sql  = "UPDATE users SET username = ? WHERE id = ?";
+        $args = [$_POST['username'], $_POST['id']];
     }
-    header("Location: pengguna.php");
-    exit;
+    $pdo->prepare($sql)->execute($args);
+    header("Location: pengguna.php"); exit;
 }
 
-$pengguna = mysqli_query($db, "SELECT * FROM users");
-$currentPage = basename($_SERVER['PHP_SELF']);
+/* ──────── 4. Ambil data ──────── */
+$pengguna = $pdo->query("SELECT * FROM users ORDER BY id ASC")
+                ->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -50,40 +47,38 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pengguna - SIKAT</title>
+
+  <!-- Tailwind & font -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            gold: '#FFD700',
-            'gold-dark': '#E5B600',
-            peach: '#FFDAB9',
-            primary: '#FFD700'
-          },
-          fontFamily: {
-            sans: ['Poppins', 'sans-serif'],
-            script: ['Pacifico', 'cursive']
-          },
-          borderRadius: {
-            button: '8px'
-          }
-        }
-      }
+      theme:{extend:{
+        colors:{gold:'#FFD700','gold-dark':'#E5B600',peach:'#FFDAB9'},
+        fontFamily:{sans:['Poppins','sans-serif'],script:['Pacifico','cursive']},
+        borderRadius:{button:'8px'}
+      }}
     }
   </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
+
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
   <?php include 'sidebar.php'; ?>
+
+  <!-- ────────────────  MAIN  ──────────────── -->
   <main class="flex-1 p-6">
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-serif text-gold">Data Pengguna</h1>
-      <button onclick="document.getElementById('modalTambah').classList.remove('hidden')" class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded-button shadow">+ Tambah Pengguna</button>
+      <button type="button"
+              onclick="document.getElementById('modalTambah').classList.remove('hidden')"
+              class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded-button shadow">
+        + Tambah Pengguna
+      </button>
     </div>
+
     <div class="bg-white rounded-2xl border border-gold shadow overflow-x-auto">
       <table class="w-full text-sm">
         <thead class="bg-yellow-100">
@@ -94,55 +89,79 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           </tr>
         </thead>
         <tbody>
-          <?php $no = 1; while ($row = mysqli_fetch_assoc($pengguna)) : ?>
+          <?php foreach ($pengguna as $no => $row): ?>
           <tr class="border-b hover:bg-yellow-50">
-            <td class="px-4 py-2"><?= $no++ ?></td>
+            <td class="px-4 py-2"><?= $no + 1 ?></td>
             <td class="px-4 py-2"><?= htmlspecialchars($row['username']) ?></td>
             <td class="px-4 py-2">
-              <button onclick="editPengguna(<?= $row['id'] ?>, '<?= addslashes($row['username']) ?>')" class="text-blue-600 hover:underline">Edit</button>
-              <a href="?hapus=<?= $row['id'] ?>" onclick="return confirm('Yakin ingin hapus?')" class="text-red-600 hover:underline ml-4">Hapus</a>
+              <button type="button"
+                      class="btn-edit text-blue-600 hover:underline"
+                      data-id="<?= $row['id'] ?>"
+                      data-username="<?= htmlspecialchars($row['username'], ENT_QUOTES) ?>">
+                Edit
+              </button>
+              <a href="?hapus=<?= $row['id'] ?>"
+                 onclick="return confirm('Yakin ingin hapus?')"
+                 class="text-red-600 hover:underline ml-4">Hapus</a>
             </td>
           </tr>
-          <?php endwhile; ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
   </main>
 </div>
 
-<!-- Modal Tambah -->
-<div id="modalTambah" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
+<!-- ────────────────  MODAL TAMBAH  ──────────────── -->
+<div id="modalTambah"
+     class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
   <form method="POST" class="bg-white p-6 rounded-xl shadow-lg w-96 border border-gold">
     <h2 class="text-xl font-semibold text-gray-700 mb-4">Tambah Pengguna</h2>
-    <input type="text" name="username" placeholder="Username" required class="w-full border px-3 py-2 rounded mb-3" />
-    <input type="password" name="password" placeholder="Password" required class="w-full border px-3 py-2 rounded mb-4" />
+    <input type="text" name="username" placeholder="Username" required
+           class="w-full border px-3 py-2 rounded mb-3">
+    <input type="password" name="password" placeholder="Password" required
+           class="w-full border px-3 py-2 rounded mb-4">
     <div class="text-right">
-      <button type="button" onclick="document.getElementById('modalTambah').classList.add('hidden')" class="mr-3">Batal</button>
-      <button name="tambah" class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded">Simpan</button>
+      <button type="button"
+              onclick="document.getElementById('modalTambah').classList.add('hidden')"
+              class="mr-3">Batal</button>
+      <button name="tambah"
+              class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded">Simpan</button>
     </div>
   </form>
 </div>
 
-<!-- Modal Edit -->
-<div id="modalEdit" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
+<!-- ────────────────  MODAL EDIT  ──────────────── -->
+<div id="modalEdit"
+     class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden">
   <form method="POST" class="bg-white p-6 rounded-xl shadow-lg w-96 border border-gold">
     <input type="hidden" name="id" id="editId">
     <h2 class="text-xl font-semibold text-gray-700 mb-4">Edit Pengguna</h2>
-    <input type="text" name="username" id="editUsername" required class="w-full border px-3 py-2 rounded mb-3" />
-    <input type="password" name="password" placeholder="Kosongkan jika tidak diubah" class="w-full border px-3 py-2 rounded mb-4" />
+    <input type="text" name="username" id="editUsername" required
+           class="w-full border px-3 py-2 rounded mb-3">
+    <input type="password" name="password"
+           placeholder="Kosongkan jika tidak diubah"
+           class="w-full border px-3 py-2 rounded mb-4">
     <div class="text-right">
-      <button type="button" onclick="document.getElementById('modalEdit').classList.add('hidden')" class="mr-3">Batal</button>
-      <button name="edit" class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded">Update</button>
+      <button type="button"
+              onclick="document.getElementById('modalEdit').classList.add('hidden')"
+              class="mr-3">Batal</button>
+      <button name="edit"
+              class="bg-gold-dark hover:bg-gold text-white px-4 py-2 rounded">Update</button>
     </div>
   </form>
 </div>
 
+<!-- ────────────────  JS  ──────────────── -->
 <script>
-function editPengguna(id, username) {
-  document.getElementById('editId').value = id;
-  document.getElementById('editUsername').value = username;
-  document.getElementById('modalEdit').classList.remove('hidden');
-}
+// Listener untuk semua tombol Edit
+document.querySelectorAll('.btn-edit').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.getElementById('editId').value        = btn.dataset.id;
+    document.getElementById('editUsername').value  = btn.dataset.username;
+    document.getElementById('modalEdit').classList.remove('hidden');
+  });
+});
 </script>
 </body>
 </html>
