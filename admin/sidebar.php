@@ -49,13 +49,6 @@
       <span>Pengguna</span>
     </a>
 
-    <a href="laporan.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'laporan.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
-      <div class="w-6 h-6 flex items-center justify-center mr-3">
-        <i class="ri-file-chart-line"></i>
-      </div>
-      <span>Laporan</span>
-    </a>
-
     <a href="logout.php" class="nav-item flex items-center px-4 py-3 <?= $currentPage == 'logout.php' ? 'bg-yellow-100 border-l-4 border-yellow-400 text-gray-900 font-semibold' : 'text-gray-700' ?>">
       <div class="w-6 h-6 flex items-center justify-center mr-3">
         <i class="ri-settings-3-line"></i>
