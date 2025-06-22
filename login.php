@@ -1,6 +1,28 @@
 <?php
 // login.php
 session_start();
+
+// Jika sudah login, redirect ke dashboard sesuai role
+if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in']) {
+    $redirect_url = 'index.php';
+    switch($_SESSION['user_role']) {
+        case 'admin':
+            $redirect_url = 'admin/eoadmin_dashboard.php';
+            break;
+        case 'petugas':
+            $redirect_url = 'petugastamu_dashboard.php';
+            break;
+        case 'pengantin':
+            $redirect_url = 'userpengantin_dashboard.php';
+            break;
+        case 'tamu':
+            $redirect_url = 'tamu_dashboard.php';
+            break;
+    }
+    header("Location: $redirect_url");
+    exit();
+}
+
 require 'koneksi.php';
 
 
