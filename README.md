@@ -113,6 +113,3 @@ SIKAT mendukung beberapa jenis peran pengguna seperti Admin, Petugas, User Penga
 - [Adiska Bayu Deri Saputra (2257051034)](https://github.com/Adiskabayu)
 - [Oryza Surya Hapsari (2317051107)](https://github.com/oshlite)  
 
----
-
-Kalau kamu butuh README.md dalam bentuk file atau markdown siap copy paste, tinggal bilang ya!
