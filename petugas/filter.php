@@ -23,65 +23,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <title>Pencarian Buku Tamu</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 </head>
-<body class="bg-gray-900 text-white p-8">
 
-<div class="max-w-7xl mx-auto bg-gray-800 p-6 rounded-lg shadow">
-    <h2 class="text-2xl font-bold mb-4">Cari Nama Tamu</h2>
+<body class="bg-gray-100 font-sans">
 
-    <form method="POST" class="mb-6">
-        <div class="flex flex-col md:flex-row md:items-center gap-3">
-            <input 
-                type="text" 
-                name="search" 
-                value="<?= htmlspecialchars($search) ?>"
-                placeholder="Masukkan nama tamu..." 
-                class="w-full md:w-1/3 px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring focus:ring-indigo-500"
-            >
-            <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded text-white">
-                Cari
-            </button>
-        </div>
-    </form>
+    <div class="min-h-screen p-8">
+        <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-bold text-gray-700">Pencarian Buku Tamu</h2>
+                <a href="index.php" class="text-sm text-indigo-600 hover:underline flex items-center gap-1">
+                    <i class="ri-arrow-left-line"></i> Kembali
+                </a>
+            </div>
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full table-auto border-collapse">
-            <thead class="bg-gray-700">
-                <tr>
-                    <th class="px-4 py-2 text-left">Nama</th>
-                    <th class="px-4 py-2 text-left">Keperluan</th>
-                    <th class="px-4 py-2 text-left">Area</th>
-                    <th class="px-4 py-2 text-left">Luar Provinsi</th>
-                    <th class="px-4 py-2 text-left">Waktu</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-700">
-                <?php if ($data): ?>
-                    <?php foreach ($data as $row): ?>
-                        <tr class="hover:bg-gray-700">
-                            <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
-                            <td class="px-4 py-2"><?= htmlspecialchars($row['keperluan']) ?></td>
-                            <td class="px-4 py-2"><?= htmlspecialchars($row['area']) ?></td>
-                            <td class="px-4 py-2">
-                                <span class="inline-block h-6 px-2 py-1 text-xs rounded align-middle
-                                    <?= $row['luar_provinsi'] ? 'bg-red-600 text-white' : 'bg-green-600 text-white' ?>">
-                                    <?= $row['luar_provinsi'] ? 'Ya' : 'Tidak' ?>
-                                </span>
-                            </td>
-                            <td class="px-4 py-2 text-sm text-gray-300"><?= $row['waktu'] ?></td>
+            <form method="POST" class="mb-6">
+                <div class="flex flex-col md:flex-row md:items-center gap-3">
+                    <input
+                        type="text"
+                        name="search"
+                        value="<?= htmlspecialchars($search) ?>"
+                        placeholder="Masukkan nama tamu..."
+                        class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-white flex items-center gap-1">
+                        <i class="ri-search-line"></i> Cari
+                    </button>
+                </div>
+            </form>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-auto border-collapse">
+                    <thead class="bg-indigo-100 text-indigo-700">
+                        <tr>
+                            <th class="px-4 py-2 text-left">Nama</th>
+                            <th class="px-4 py-2 text-left">Keperluan</th>
+                            <th class="px-4 py-2 text-left">Area</th>
+                            <th class="px-4 py-2 text-left">Luar Provinsi</th>
+                            <th class="px-4 py-2 text-left">Waktu</th>
                         </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr><td colspan="5" class="text-center px-4 py-3 text-gray-400">Data tidak ditemukan.</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <?php if ($data): ?>
+                            <?php foreach ($data as $row): ?>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['nama']) ?></td>
+                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['keperluan']) ?></td>
+                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['area']) ?></td>
+                                    <td class="px-4 py-2">
+                                        <span class="inline-block px-2 py-1 text-xs rounded 
+                    <?= $row['luar_provinsi'] ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
+                                            <?= $row['luar_provinsi'] ? 'Ya' : 'Tidak' ?>
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-500"><?= $row['waktu'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center px-4 py-3 text-gray-400">Data tidak ditemukan.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-</div>
 
 </body>
+
 </html>
