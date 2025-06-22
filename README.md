@@ -9,7 +9,7 @@ EO, web untuk petugas, dan juga berbagai fitur tambahan yang kami berikan dalam 
 - php
 - website
 - JS
-- MySql
+- MySQL
 - tailwindcss
 
 ## 📚 Fitur
