@@ -13,11 +13,10 @@ SIKAT mendukung beberapa jenis peran pengguna seperti Admin, Petugas, User Penga
 ### Untuk **Admin**:
 
 * Dashboard statistik dan ringkasan
-* Manajemen daftar tamu (CRUD lengkap)
+* Manajemen daftar tamu
 * Data keperluan kunjungan (dari mempelai pria/wanita)
 * Manajemen area duduk
 * Kelola akun user & petugas penerima tamu
-* Filter dan pencarian daftar tamu
 * Laporan kehadiran dan statistik
 
 ### Untuk **User Pengantin**:
