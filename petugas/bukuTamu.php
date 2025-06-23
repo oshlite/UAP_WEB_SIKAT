@@ -1,6 +1,12 @@
 <?php
 require_once "../koneksi.php";
 
+session_start();
+if (!isset($_SESSION['user'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 try {
   $stmt = $pdo->query("SELECT * FROM tamu ORDER BY waktu DESC");
   $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
