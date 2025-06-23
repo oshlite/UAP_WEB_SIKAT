@@ -1,6 +1,6 @@
 <?php
 
-$db = new mysqli('localhost','root','','database_sikatbukutamu');
+$db = new mysqli('sql210.infinityfree.com','if0_39298307','ROOTSIKAT123','if0_39298307_database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
 
 $categoryMap = [
