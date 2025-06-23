@@ -2,7 +2,7 @@
 require_once "../koneksi.php";
 
 try {
-  $stmt = $pdo->query("SELECT * FROM petugas ORDER BY waktu DESC");
+  $stmt = $pdo->query("SELECT * FROM tamu ORDER BY waktu DESC");
   $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
   die("Gagal mengambil data: " . $e->getMessage());

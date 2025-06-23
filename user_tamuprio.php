@@ -1,4 +1,5 @@
 <?php
+include 'protect_user.php';
 
 $db = new mysqli('localhost','root','','database_sikatbukutamu');
 if($db->connect_error) {
@@ -14,6 +15,20 @@ $categoryMap = [
   'Tamu luar provinsi'       => ['Meja VIP',             'bg-yellow-100 text-yellow-700']
 ];
 
+// Ambil parameter pencarian dan filter
+$search = trim($_GET['search'] ?? '');
+$filter = trim($_GET['kategori'] ?? '');
+
+$where = [];
+if($search !== '') {
+  $where[] = "name LIKE '%".$db->real_escape_string($search)."%'";
+
+}
+if($filter !== '' && isset($categoryMap[$filter])) {
+  $where[] = "kategori = '".$db->real_escape_string($filter)."'";
+}
+$whereSql = $where ? ('WHERE '.implode(' AND ', $where)) : '';
+
 if($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action'] ?? '')==='delete') {
   $id = intval($_POST['id']);
   $ok = (bool)$db->query("DELETE FROM tamu_prio WHERE id=$id");
@@ -23,7 +38,7 @@ if($_SERVER['REQUEST_METHOD']==='POST' && ($_POST['action'] ?? '')==='delete') {
 }
 
 $invitedGuests = [];
-$res = $db->query("SELECT * FROM tamu_prio ORDER BY id");
+$res = $db->query("SELECT * FROM tamu_prio $whereSql ORDER BY id");
 while($row = $res->fetch_assoc()) {
   list($area,$cls) = $categoryMap[$row['kategori']] 
                      ?? ['Area Umum','bg-gray-100 text-gray-700'];
@@ -89,50 +104,7 @@ while($row = $res->fetch_assoc()) {
 </head>
 <body>
   <div class="flex h-screen bg-gray-50">
-    <div class="w-64 bg-white shadow-md hidden md:block">
-      <div class="p-4 flex items-center">
-        <h1 class="text-2xl font-['Pacifico'] text-primary">SIKAT</h1>
-        user_tamuprio<span class="ml-2 text-xs bg-secondary bg-opacity-30 text-gray-700 px-2 py-1 rounded-full">User Pengantin</span>
-      </div>
-      <div class="mt-6">
-        <?php 
-        $menu = [
-          'Dashboard'=>'ri-dashboard-line',
-          'Manajemen Tamu'=>'ri-user-3-line',
-          'Keperluan Kunjungan'=>'ri-question-answer-line',
-          'Area Duduk'=>'ri-map-pin-line',
-          'Petugas'=>'ri-team-line',
-          'Pengguna'=>'ri-user-settings-line',
-          'Laporan'=>'ri-file-chart-line',
-          'Pengaturan'=>'ri-settings-3-line'
-        ];
-        foreach($menu as $label=>$icon):
-          $active = ($label==='Manajemen Tamu') ? ' active' : '';
-        ?>
-        <div class="sidebar-item<?= $active ?> px-4 py-3 flex items-center">
-          <div class="w-8 h-8 flex items-center justify-center text-<?= $active?'primary':'gray-600' ?>">
-            <i class="<?= $icon ?> ri-lg"></i>
-          </div>
-          <span class="ml-2 text-gray-800"><?= $label ?></span>
-        </div>
-        <?php endforeach; ?>
-      </div>
-      <div class="mt-auto p-4 border-t">
-        <div class="flex items-center">
-          <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-            <i class="ri-user-line ri-lg"></i>
-          </div>
-          <div class="ml-3">
-            <p class="text-sm font-medium text-gray-800">Adi Nugroho</p>
-            <p class="text-xs text-gray-500">Administrator</p>
-          </div>
-          <div class="ml-auto w-8 h-8 flex items-center justify-center">
-            <i class="ri-logout-box-r-line text-gray-500"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
+    <?php include 'user_sidebar.php'; ?>
     <div class="flex-1 flex flex-col overflow-hidden">
       <header class="bg-white shadow-sm z-10">
         <div class="px-4 py-2 bg-gray-50 flex items-center text-sm">
@@ -143,11 +115,23 @@ while($row = $res->fetch_assoc()) {
       </header>
 
       <main class="flex-1 overflow-y-auto p-4 bg-gray-50">
-        <div class="mb-6 flex items-center justify-between">
+        <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 class="text-2xl font-serif font-semibold text-gray-800">Daftar Tamu Undangan</h1>
             <p class="text-gray-600 text-sm">Kelola tamu resmi undangan pengantin</p>
           </div>
+          <form method="get" class="flex flex-wrap gap-2 items-center">
+            <input type="text" name="search" value="<?= htmlspecialchars($search) ?>" placeholder="Cari nama tamu..." class="border border-gray-200 rounded-lg px-3 py-2 text-sm" />
+            <select name="kategori" class="border border-gray-200 rounded-lg px-3 py-2 text-sm">
+              <option value="">Semua Kategori</option>
+              <?php foreach(array_keys($categoryMap) as $cat): ?>
+                <option value="<?= htmlspecialchars($cat) ?>" <?= $filter===$cat?'selected':'' ?>><?= htmlspecialchars($cat) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button type="submit" class="bg-primary text-white px-3 py-2 rounded-lg text-sm flex items-center">
+              <i class="ri-search-line mr-1"></i> Cari
+            </button>
+          </form>
           <a href="user_tamuprio_tambah.php"
              class="bg-primary text-white px-4 py-2 rounded-lg text-sm flex items-center !rounded-button">
             <i class="ri-add-line mr-2"></i> Tambah Tamu

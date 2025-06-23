@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $search = $_POST['search'] ?? '';
 
     try {
-        $stmt = $pdo->prepare("SELECT * FROM petugas WHERE nama LIKE :search ORDER BY waktu DESC");
+        $stmt = $pdo->prepare("SELECT * FROM tamu WHERE nama LIKE :search ORDER BY waktu DESC");
         $stmt->execute([':search' => '%' . $search . '%']);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 } else {
     // Menampilkan semua data saat pertama kali dibuka
-    $stmt = $pdo->query("SELECT * FROM petugas ORDER BY waktu DESC");
+    $stmt = $pdo->query("SELECT * FROM tamu ORDER BY waktu DESC");
     $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>

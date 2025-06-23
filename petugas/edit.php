@@ -7,7 +7,7 @@ if (!$id) {
 }
 
 // Ambil data lama untuk isi form
-$stmt = $pdo->prepare("SELECT * FROM petugas WHERE id = :id");
+$stmt = $pdo->prepare("SELECT * FROM tamu WHERE id = :id");
 $stmt->execute([':id' => $id]);
 $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $area = $_POST['area'] ?? '';
     $luar_provinsi = isset($_POST['luar_provinsi']) ? 1 : 0;
 
-    $sql = "UPDATE petugas 
+    $sql = "UPDATE tamu 
             SET nama = :nama, keperluan = :keperluan, area = :area, luar_provinsi = :luar_provinsi 
             WHERE id = :id";
 

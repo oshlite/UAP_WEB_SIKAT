@@ -2,21 +2,41 @@
 require_once '../koneksi.php';
 
 // Total tamu hari ini
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM petugas WHERE luar_provinsi LIKE :keyword");
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM tamu WHERE luar_provinsi LIKE :keyword");
 $stmt->execute([':keyword' => '%1%']);
 $totalLuarKota = $stmt->fetchColumn();
 
 // Total tamu terdaftar (seluruh data)
-$stmt = $pdo->query("SELECT COUNT(*) FROM petugas");
+$stmt = $pdo->query("SELECT COUNT(*) FROM tamu");
 $totalTerdaftar = $stmt->fetchColumn();
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM petugas WHERE keperluan LIKE :keyword");
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM tamu WHERE keperluan LIKE :keyword");
 $stmt->execute([':keyword' => '%prioritas%']);
 $totalPrioritas = $stmt->fetchColumn();
+
+$stmt = $pdo->query("SELECT COUNT(*) FROM petugas");
+$totalPetugas = $stmt->fetchColumn();
 
 
 // Total petugas aktif (dummy 12, atau buat logika tertentu)
 $totalPetugasAktif = 12;
+
+$stmt = $pdo->prepare("
+    SELECT HOUR(waktu) AS jam, COUNT(*) AS jumlah 
+    FROM tamu 
+    WHERE DATE(waktu)
+    GROUP BY jam
+    ORDER BY jam ASC
+");
+$stmt->execute();
+
+$jam = [];
+$jumlah = [];
+
+foreach ($stmt as $row) {
+    $jam[] = sprintf('%02d:00', $row['jam']); // format jadi 01:00, 02:00, ...
+    $jumlah[] = $row['jumlah'];
+}
 ?>
 
 <!DOCTYPE html>
@@ -57,6 +77,7 @@ $totalPetugasAktif = 12;
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.5.0/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :where([class^="ri-"])::before {
             content: "\f3c2";
@@ -276,7 +297,7 @@ $totalPetugasAktif = 12;
                     </div>
                     <nav class="flex-1 px-2 pb-4">
                         <div class="space-y-1">
-                            <a href="#" class="sidebar-item active flex items-center px-3 py-2 text-sm font-medium rounded-md group">
+                            <a href="index.php" class="sidebar-item active flex items-center px-3 py-2 text-sm font-medium rounded-md group">
                                 <div class="w-6 h-6 mr-3 flex items-center justify-center text-primary">
                                     <i class="ri-dashboard-line ri-lg"></i>
                                 </div>
@@ -294,7 +315,7 @@ $totalPetugasAktif = 12;
                                 </div>
                                 <span>Filter & Pencarian</span>
                             </a>
-                            <a href="#" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md group">
+                            <a href="../logout.php" class="sidebar-item flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md group">
                                 <div class="w-6 h-6 mr-3 flex items-center justify-center text-gray-500">
                                     <i class="ri-settings-3-line ri-lg"></i>
                                 </div>
@@ -373,18 +394,6 @@ $totalPetugasAktif = 12;
                             <p class="mt-1 text-sm text-gray-500">Selamat datang di Sistem Informasi Kunjungan Tamu Andalan</p>
                         </div>
                         <div class="mt-4 md:mt-0 flex space-x-3">
-                            <!-- Tombol Pilih Tanggal -->
-                            <form method="GET" action="filterTanggal.php" class="inline-block">
-                                <input type="date" name="tanggal" class="hidden" id="tanggalPicker">
-                                <button
-                                    type="button"
-                                    onclick="openDatePicker()"
-                                    class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg bg-white text-gray-700 hover:bg-gray-50 whitespace-nowrap">
-                                    <i class="ri-calendar-line mr-2"></i>
-                                    Pilih Tanggal
-                                </button>
-                            </form>
-
                             <a
                                 href="tambah.php"
                                 class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-yellow-500 hover:bg-yellow-600 whitespace-nowrap">
@@ -460,7 +469,7 @@ $totalPetugasAktif = 12;
                             </div>
                             <div class="ml-4">
                                 <h2 class="text-sm font-medium text-gray-500">Petugas Aktif</h2>
-                                <p class="text-2xl font-bold text-gray-900">12</p>
+                                <p class="text-2xl font-bold text-gray-900"><?= $totalPetugas ?></p>
                             </div>
                         </div>
                         <div class="mt-4 flex items-center text-xs text-gray-600">
@@ -471,35 +480,45 @@ $totalPetugasAktif = 12;
                 </div>
 
                 <!-- Charts Section -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    <!-- Visitor Chart -->
-                    <div class="card p-5 lg:col-span-2 relative overflow-hidden">
-                        <div class="batik-accent top-0 right-0"></div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-medium heading-font">Statistik Kunjungan</h3>
-                            <div class="flex space-x-2">
-                                <button class="px-3 py-1 text-xs font-medium rounded-full bg-primary bg-opacity-10 text-primary">Hari Ini</button>
-                            </div>
-                        </div>
-                        <div id="visitor-chart" class="h-64"></div>
-                    </div>
 
-                    <!-- Area Distribution -->
-                    <div class="card p-5 relative overflow-hidden">
-                        <div class="batik-accent top-0 right-0"></div>
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-medium heading-font">Distribusi Area</h3>
-                            <button class="text-sm text-gray-500 hover:text-primary">
-                                <i class="ri-more-2-fill"></i>
-                            </button>
-                        </div>
-                        <div id="area-chart" class="h-64"></div>
-                    </div>
+                <div class="bg-white p-6 rounded shadow my-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Kunjungan Hari Ini (Per Jam)</h2>
+                    <div id="chart-kunjungan-jam" class="w-full h-64"></div>
                 </div>
             </main>
         </div>
     </div>
+
     <script src="index.js"></script>
+    <script>
+        var chartKunjunganJam = echarts.init(document.getElementById('chart-kunjungan-jam'));
+
+        chartKunjunganJam.setOption({
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: {
+                type: 'category',
+                data: <?= json_encode($jam) ?>,
+                axisLabel: {
+                    rotate: 45
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: 'Jumlah Kunjungan',
+                type: 'bar',
+                data: <?= json_encode($jumlah) ?>,
+                itemStyle: {
+                    color: '#6366f1'
+                },
+                barWidth: '60%'
+            }]
+        });
+    </script>
+
 </body>
 
 </html>
