@@ -57,6 +57,7 @@ $petugas = $pdo->query("SELECT * FROM petugas ORDER BY id ASC")->fetchAll(PDO::F
 </head>
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
+  <?php $currentPage = basename('petugas.php'); ?>
   <?php include 'sidebar.php'; ?>
 
   <!-- MAIN SECTION -->

@@ -66,6 +66,7 @@ $pengguna = $pdo->query("SELECT * FROM users ORDER BY id ASC")
 
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
+  <?php $currentPage = basename('pengguna.php'); ?>
   <?php include 'sidebar.php'; ?>
 
   <!-- ────────────────  MAIN  ──────────────── -->

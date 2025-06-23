@@ -64,6 +64,7 @@ $area = $pdo->query("SELECT * FROM area_duduk ORDER BY id ASC")->fetchAll(PDO::F
 </head>
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
+  <?php $currentPage = basename('area.php'); ?>
   <?php include 'sidebar.php'; ?>
   <main class="flex-1 p-6">
     <div class="flex justify-between items-center mb-6">

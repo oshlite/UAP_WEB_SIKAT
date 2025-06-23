@@ -70,6 +70,7 @@ $data_prio = $pdo->query("SELECT * FROM tamu_prio ORDER BY waktu DESC")->fetchAl
 </head>
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 min-h-screen font-sans">
   <div class="flex">
+    <?php $currentPage = basename('DaftarTamu(admin).php'); ?>
     <?php include 'sidebar.php'; ?>
     <main class="flex-1 p-8 space-y-10">
       <h1 class="text-3xl font-serif text-gold mb-4">Manajemen Tamu</h1>

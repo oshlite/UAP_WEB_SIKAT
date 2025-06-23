@@ -61,6 +61,7 @@ try {
 </head>
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 min-h-screen font-sans">
   <div class="flex min-h-screen">
+    <?php $currentPage = basename('eoadmin_dashboard.php'); ?>
     <?php include 'sidebar.php'; ?>
 
     <main class="flex-1 p-6">

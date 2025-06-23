@@ -56,6 +56,7 @@ $keperluan = $pdo->query("SELECT * FROM keperluan_kunjungan ORDER BY id ASC")
 
 <body class="bg-gradient-to-br from-peach via-white to-gold bg-opacity-30 font-sans min-h-screen">
 <div class="flex min-h-screen">
+  <?php $currentPage = basename('keperluan.php'); ?>
   <?php include 'sidebar.php'; ?>
 
   <!-- ────────────────  MAIN  ──────────────── -->
