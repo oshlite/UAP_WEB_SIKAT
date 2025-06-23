@@ -66,7 +66,7 @@ SIKAT mendukung beberapa jenis peran pengguna seperti Admin, Petugas, User Penga
 
 * Kelola data tamu melalui menu "Daftar Tamu".
 * Atur area duduk dan petugas penerima tamu.
-* Lihat statistik kehadiran dan ekspor laporan.
+* Lihat statistik kehadiran.
 * Tambah atau hapus akun pengguna lain.
 
 ### Sebagai **User Pengantin**:
