@@ -1,7 +1,7 @@
 <?php
 include 'protect_user.php';
 
-$db = new mysqli('localhost','root','','database_sikatbukutamu');
+$db = new mysqli('sql210.infinityfree.com','if0_39298307','ROOTSIKAT123','if0_39298307_database_sikatbukutamu');
 if($db->connect_error) {
   die('DB Error: '.$db->connect_error);
 }
@@ -142,11 +142,12 @@ while($r = $res->fetch_assoc()) {
     </main>
   </div>
 
+  <!-- Modal hanya untuk edit -->
   <div id="modal" class="modal">
     <div class="modal-content">
-      <h2 id="modalTitle" class="text-xl font-medium text-gray-800 mb-4">Tambah Keperluan</h2>
+      <h2 id="modalTitle" class="text-xl font-medium text-gray-800 mb-4">Edit Keperluan</h2>
       <form id="form" method="post" class="space-y-4">
-        <input type="hidden" name="action" id="actionInput" value="add">
+        <input type="hidden" name="action" id="actionInput" value="edit">
         <input type="hidden" name="id"     id="idInput">
         <div>
           <label class="block text-sm font-medium text-gray-700">Nama Keperluan</label>
@@ -166,12 +167,6 @@ while($r = $res->fetch_assoc()) {
             <option value="<?= $id ?>"><?= htmlspecialchars($nm) ?></option>
             <?php endforeach ?>
           </select>
-          <small class="text-xs text-gray-500">
-            Belum ada area? 
-            <a href="user_areaduduk.php?return=keperluan" class="text-primary underline">
-              Tambah Area
-            </a>
-          </small>
         </div>
         <div class="flex justify-end space-x-2 mt-4">
           <button type="button" id="btnCancel"
@@ -195,7 +190,6 @@ while($r = $res->fetch_assoc()) {
   <script>
   document.addEventListener('DOMContentLoaded', ()=>{
     const modal      = document.getElementById('modal'),
-          btnAdd     = document.getElementById('btnAdd'),
           btnCancel  = document.getElementById('btnCancel'),
           form       = document.getElementById('form'),
           actionIn   = document.getElementById('actionInput'),
@@ -208,10 +202,6 @@ while($r = $res->fetch_assoc()) {
           toastClose = document.getElementById('toastClose'),
           title      = document.getElementById('modalTitle');
 
-    btnAdd.onclick = ()=>{
-      actionIn.value='add'; idIn.value=''; form.reset();
-      title.textContent='Tambah Keperluan'; modal.style.display='block';
-    };
     document.querySelectorAll('.edit-btn').forEach(b=>{
       b.onclick=()=>{
         actionIn.value='edit'; idIn.value=b.dataset.id;
@@ -239,9 +229,6 @@ while($r = $res->fetch_assoc()) {
       toast.classList.toggle('error', st==='error');
       toast.style.display='flex';
       setTimeout(()=> toast.style.display='none',3000);
-    }
-    if(new URLSearchParams(location.search).get('openAdd')==='1'){
-      btnAdd.click();
     }
   });
   </script>
