@@ -1,6 +1,12 @@
 <?php
 require_once '../koneksi.php';
 
+session_start();
+if (!isset($_SESSION['user'])) {
+    header("Location: ../login.php");
+    exit;
+}
+
 // Total tamu hari ini
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM tamu WHERE luar_provinsi LIKE :keyword");
 $stmt->execute([':keyword' => '%1%']);
@@ -10,8 +16,7 @@ $totalLuarKota = $stmt->fetchColumn();
 $stmt = $pdo->query("SELECT COUNT(*) FROM tamu");
 $totalTerdaftar = $stmt->fetchColumn();
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM tamu WHERE keperluan LIKE :keyword");
-$stmt->execute([':keyword' => '%prioritas%']);
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM tamu_prio");
 $totalPrioritas = $stmt->fetchColumn();
 
 $stmt = $pdo->query("SELECT COUNT(*) FROM petugas");
