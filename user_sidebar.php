@@ -32,7 +32,7 @@
         <i class="ri-user-line ri-lg"></i>
       </div>
       <div class="ml-3">
-        <p class="text-sm font-medium text-gray-800">Budi Santoso</p>
+        <p class="text-sm font-medium text-gray-800">Pengantin A & B</p>
         <p class="text-xs text-gray-500">User Pengantin</p>
       </div>
       <div class="ml-auto w-8 h-8 flex items-center justify-center">

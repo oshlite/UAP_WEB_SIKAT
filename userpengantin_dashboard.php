@@ -1,7 +1,7 @@
 <?php
 include 'protect_user.php';
 // Dashboard Pengantin - Konsisten dengan user_*.php
-$db = new mysqli('localhost','root','','database_sikatbukutamu');
+$db = new mysqli('sql210.infinityfree.com','if0_39298307','ROOTSIKAT123','if0_39298307_database_sikatbukutamu');
 if($db->connect_error) die('DB Error: '.$db->connect_error);
 
 // Jika ada ?export=1, trigger download export_tamu.php setelah load
@@ -17,6 +17,21 @@ $totalArea = $db->query("SELECT COUNT(*) FROM area_duduk")->fetch_row()[0];
 $areaTersedia = $totalArea; // Tidak ada kolom status, jadi anggap semua tersedia
 $totalPetugas = $db->query("SELECT COUNT(*) FROM petugas")->fetch_row()[0];
 $petugasAktif = $totalPetugas; // Tidak ada kolom status, jadi anggap semua aktif
+
+// Data tamu per hari (7 hari terakhir)
+$hariLabels = [];
+$tamuPerHari = [];
+$res = $db->query("SELECT DATE(waktu) as tgl, COUNT(*) as jumlah FROM tamu GROUP BY DATE(waktu) ORDER BY tgl DESC LIMIT 7");
+$dataHari = [];
+while($row = $res->fetch_assoc()) {
+  $dataHari[$row['tgl']] = $row['jumlah'];
+}
+$dates = [];
+for ($i = 6; $i >= 0; $i--) {
+  $tgl = date('Y-m-d', strtotime("-$i days"));
+  $hariLabels[] = date('d M', strtotime($tgl));
+  $tamuPerHari[] = isset($dataHari[$tgl]) ? (int)$dataHari[$tgl] : 0;
+}
 
 // Daftar tamu terbaru
 $tamuTerbaru = [];
@@ -62,7 +77,7 @@ while($r = $res->fetch_assoc()) $tamuTerbaru[] = $r;
       <div class="mb-6 flex flex-col md:flex-row md:items-center md:justify-between">
         <div>
           <h1 class="text-2xl font-serif font-bold text-gray-800">Dashboard Overview</h1>
-          <p class="text-gray-600 mt-1">Selamat datang kembali, Budi Santoso</p>
+          <p class="text-gray-600 mt-1">Selamat datang kembali, Pengantin A & B</p>
         </div>
       </div>
       <!-- Stats Cards -->
@@ -164,15 +179,19 @@ while($r = $res->fetch_assoc()) $tamuTerbaru[] = $r;
     </main>
   </div>
   <script>
-    // Chart.js statistik tamu hari ini (dummy data, ganti dengan data real jika ada)
+    // Data PHP ke JS
+    const hariLabels = <?= json_encode($hariLabels) ?>;
+    const tamuPerHari = <?= json_encode($tamuPerHari) ?>;
+
+    // Chart.js statistik tamu hari ini
     const ctx = document.getElementById('statistikChart').getContext('2d');
     const statistikChart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'],
+        labels: hariLabels, // label tanggal
         datasets: [{
           label: 'Jumlah Tamu',
-          data: [12, 25, 41, 32, 18, 35, 29, 42, 38, 25, 16, 8], // Ganti dengan data real jika ada
+          data: tamuPerHari, // data jumlah tamu per hari
           backgroundColor: '#FFD700',
           borderColor: '#E5B600',
           borderWidth: 1,
