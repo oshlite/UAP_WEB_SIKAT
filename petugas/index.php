@@ -285,17 +285,7 @@ foreach ($stmt as $row) {
                     <h1 class="text-2xl font-bold logo-font text-primary">SIKAT</h1>
                 </div>
                 <div class="flex flex-col flex-grow overflow-y-auto bg-white">
-                    <div class="px-4 py-5">
-                        <div class="flex flex-col items-center mb-6">
-                            <div class="relative w-20 h-20 mb-3">
-                                <img class="rounded-full object-cover w-full h-full" src="https://readdy.ai/api/search-image?query=professional%20portrait%20of%20Indonesian%20man%20in%20formal%20attire%2C%20wearing%20batik%2C%20warm%20lighting%2C%20professional%20headshot%2C%20high%20quality&width=200&height=200&seq=admin1&orientation=squarish" alt="Admin">
-                                <div class="absolute bottom-0 right-0 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></div>
-                            </div>
-                            <h2 class="text-sm font-semibold">Budi Santoso</h2>
-                            <p class="text-xs text-gray-500">Admin EO</p>
-                        </div>
-                    </div>
-                    <nav class="flex-1 px-2 pb-4">
+                    <nav class="flex-1 px-2 pb-4 mt-10">
                         <div class="space-y-1">
                             <a href="index.php" class="sidebar-item active flex items-center px-3 py-2 text-sm font-medium rounded-md group">
                                 <div class="w-6 h-6 mr-3 flex items-center justify-center text-primary">
@@ -357,29 +347,7 @@ foreach ($stmt as $row) {
                                 <i class="ri-calendar-line mr-1"></i>
                                 <p id="datetime"></p>
                             </div>
-
-                            <!-- Profile dropdown -->
-                            <div class="relative dropdown">
-                                <button class="flex items-center max-w-xs text-sm rounded-full focus:outline-none">
-                                    <img class="h-8 w-8 rounded-full object-cover" src="https://readdy.ai/api/search-image?query=professional%20portrait%20of%20Indonesian%20man%20in%20formal%20attire%2C%20wearing%20batik%2C%20warm%20lighting%2C%20professional%20headshot%2C%20high%20quality&width=200&height=200&seq=admin1&orientation=squarish" alt="Admin">
-                                </button>
-                                <div class="dropdown-content mt-2 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5">
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil Anda</a>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Pengaturan</a>
-                                    <div class="border-t border-gray-100"></div>
-                                    <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Keluar</a>
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Breadcrumb -->
-                <div class="px-4 sm:px-6 lg:px-8 py-2 bg-gray-50 border-b border-gray-200">
-                    <div class="flex items-center space-x-2 text-sm text-gray-500">
-                        <a href="#" class="hover:text-primary">Beranda</a>
-                        <i class="ri-arrow-right-s-line"></i>
-                        <span class="font-medium text-gray-700">Dashboard</span>
                     </div>
                 </div>
             </header>
@@ -418,10 +386,6 @@ foreach ($stmt as $row) {
                                 <p class="text-2xl font-bold text-gray-900"><?= $totalLuarKota ?></p>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-xs text-green-600">
-                            <i class="ri-arrow-up-line mr-1"></i>
-                            <span>12% lebih tinggi dari kemarin</span>
-                        </div>
                     </div>
 
                     <!-- Tamu Terdaftar -->
@@ -435,10 +399,6 @@ foreach ($stmt as $row) {
                                 <h2 class="text-sm font-medium text-gray-500">Tamu Terdaftar</h2>
                                 <p class="text-2xl font-bold text-gray-900"><?= $totalTerdaftar ?></p>
                             </div>
-                        </div>
-                        <div class="mt-4 flex items-center text-xs text-green-600">
-                            <i class="ri-arrow-up-line mr-1"></i>
-                            <span>5% lebih tinggi dari minggu lalu</span>
                         </div>
                     </div>
 
@@ -454,10 +414,6 @@ foreach ($stmt as $row) {
                                 <p class="text-2xl font-bold text-gray-900"><?= $totalPrioritas ?></p>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-xs text-yellow-600">
-                            <i class="ri-information-line mr-1"></i>
-                            <span>2 area hampir penuh</span>
-                        </div>
                     </div>
 
                     <!-- Petugas Aktif -->
@@ -471,10 +427,6 @@ foreach ($stmt as $row) {
                                 <h2 class="text-sm font-medium text-gray-500">Petugas Aktif</h2>
                                 <p class="text-2xl font-bold text-gray-900"><?= $totalPetugas ?></p>
                             </div>
-                        </div>
-                        <div class="mt-4 flex items-center text-xs text-gray-600">
-                            <i class="ri-time-line mr-1"></i>
-                            <span>4 petugas di pintu masuk</span>
                         </div>
                     </div>
                 </div>
