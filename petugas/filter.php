@@ -31,15 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 font-sans">
+<body class="bg-white text-gray-800 font-sans">
 
     <div class="min-h-screen p-8">
         <div class="max-w-7xl mx-auto bg-white p-6 rounded-lg shadow">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-xl font-bold text-gray-700">Pencarian Buku Tamu</h2>
-                <a href="index.php" class="text-sm text-indigo-600 hover:underline flex items-center gap-1">
-                    <i class="ri-arrow-left-line"></i> Kembali
-                </a>
+                <h2 class="text-2xl font-bold text-yellow-600">Pencarian Buku Tamu</h2>
             </div>
 
             <form method="POST" class="mb-6">
@@ -49,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         name="search"
                         value="<?= htmlspecialchars($search) ?>"
                         placeholder="Masukkan nama tamu..."
-                        class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-500 px-4 py-2 rounded-lg text-white flex items-center gap-1">
+                        class="w-full md:w-1/3 px-4 py-2 border border-yellow-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                    <button type="submit" class="bg-yellow-500 hover:bg-yellow-400 px-4 py-2 rounded-lg text-white flex items-center gap-1">
                         <i class="ri-search-line"></i> Cari
                     </button>
                 </div>
@@ -58,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto border-collapse">
-                    <thead class="bg-indigo-100 text-indigo-700">
+                    <thead class="bg-yellow-100 text-yellow-700">
                         <tr>
                             <th class="px-4 py-2 text-left">Nama</th>
                             <th class="px-4 py-2 text-left">Keperluan</th>
@@ -70,13 +67,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <tbody class="divide-y divide-gray-200">
                         <?php if ($data): ?>
                             <?php foreach ($data as $row): ?>
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['nama']) ?></td>
-                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['keperluan']) ?></td>
-                                    <td class="px-4 py-2 text-gray-700"><?= htmlspecialchars($row['area']) ?></td>
+                                <tr class="hover:bg-yellow-50">
+                                    <td class="px-4 py-2"><?= htmlspecialchars($row['nama']) ?></td>
+                                    <td class="px-4 py-2"><?= htmlspecialchars($row['keperluan']) ?></td>
+                                    <td class="px-4 py-2"><?= htmlspecialchars($row['area']) ?></td>
                                     <td class="px-4 py-2">
                                         <span class="inline-block px-2 py-1 text-xs rounded 
-                    <?= $row['luar_provinsi'] ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
+                                            <?= $row['luar_provinsi'] ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' ?>">
                                             <?= $row['luar_provinsi'] ? 'Ya' : 'Tidak' ?>
                                         </span>
                                     </td>
@@ -92,7 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </table>
             </div>
         </div>
+        <div class="flex justify-between items-center mt-6">
+            <a href="index.php" class="bg-yellow-500 hover:bg-yellow-400 text-white px-4 py-2 rounded flex items-center gap-2">
+                Kembali
+            </a>
+        </div>
     </div>
+
 
 </body>
 
